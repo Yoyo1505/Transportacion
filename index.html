@@ -31,27 +31,25 @@
         }
         .header {
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
             align-items: center;
+            text-align: center;
             margin-bottom: 20px;
-            padding: 15px;
+            padding: 20px;
             background-color: var(--navy-primario);
             border-radius: 8px;
         }
-        .logo {
-            width: 150px;
-            height: auto;
-            margin-right: 20px;
-        }
-        .titulo {
-            flex-grow: 1;
-        }
-        h1 {
+        .titulo h1 {
             color: var(--blanco);
             margin: 0;
-            font-size: clamp(20px, 5vw, 32px);
+            font-size: clamp(24px, 6vw, 36px);
             font-weight: 700;
             text-transform: uppercase;
+        }
+        .titulo p {
+            color: var(--blanco);
+            margin: 8px 0 0;
+            font-size: 16px;
         }
         h2 {
             color: var(--navy-primario);
@@ -212,19 +210,13 @@
                 padding: 15px;
             }
             .header {
-                flex-direction: column;
-                text-align: center;
+                padding: 15px;
             }
-            .logo {
-                margin-right: 0;
-                margin-bottom: 10px;
-                width: 120px;
+            .titulo h1 {
+                font-size: clamp(20px, 5vw, 28px);
             }
             .form-section, .total-section {
                 padding: 10px;
-            }
-            input, select, textarea {
-                max-width: 100%;
             }
             table {
                 font-size: 10px;
@@ -259,7 +251,6 @@
 <body>
     <div class="container">
         <div class="header">
-            <img class="logo" src="logo.png" alt="TAE Transportación" id="logo">
             <div class="titulo">
                 <h1>TAE Transportación</h1>
                 <p>Sistema de Generación de Cotizaciones</p>
@@ -378,7 +369,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const { jsPDF } = window.jspdf;
-            let logoData = null;
             let currentQuotationId = null;
             const itemsContainer = document.querySelector('#items tbody');
             const itemSelect = document.getElementById('item-select');
@@ -400,25 +390,6 @@
                 return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
                     const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
                     return v.toString(16);
-                });
-            }
-
-            function preloadLogo() {
-                return new Promise((resolve) => {
-                    const img = new Image();
-                    img.src = 'logo.png';
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        canvas.width = img.width;
-                        canvas.height = img.height;
-                        canvas.getContext('2d').drawImage(img, 0, 0);
-                        logoData = canvas.toDataURL('image/png');
-                        resolve();
-                    };
-                    img.onerror = () => {
-                        logoData = null;
-                        resolve();
-                    };
                 });
             }
 
@@ -584,7 +555,6 @@
                 const teens = ["DIEZ", "ONCE", "DOCE", "TRECE", "CATORCE", "QUINCE", "DIECISÉIS", "DIECISIETE", "DIECIOCHO", "DIECINUEVE"];
                 const tens = ["", "", "VEINTE", "TREINTA", "CUARENTA", "CINCUENTA", "SESENTA", "SETENTA", "OCHENTA", "NOVENTA"];
                 const hundreds = ["", "CIENTO", "DOSCIENTOS", "TRESCIENTOS", "CUATROCIENTOS", "QUINIENTOS", "SEISCIENTOS", "SETECIENTOS", "OCHOCIENTOS", "NOVECIENTOS"];
-                const thousands = ["MIL", "MILLÓN", "MILLONES"];
                 if (num === 0) return "CERO PESOS";
                 let integerPart = Math.floor(num);
                 let decimalPart = Math.round((num - integerPart) * 100);
@@ -603,7 +573,6 @@
                     let hundredPart = Math.floor(integerPart / 100);
                     integerPart %= 100;
                     words += hundreds[hundredPart] + " ";
-                    if (integerPart > 0 && integerPart < 100) words += "";
                 }
                 if (integerPart >= 20) {
                     let tenPart = Math.floor(integerPart / 10);
@@ -629,18 +598,13 @@
                 const pageWidth = doc.internal.pageSize.getWidth() - marginLeft - marginRight;
                 doc.setFillColor(13, 17, 32);
                 doc.rect(0, 0, doc.internal.pageSize.getWidth(), 40, 'F');
-                if (logoData) {
-                    doc.addImage(logoData, 'PNG', marginLeft, 5, 30, 25);
-                    doc.setFont("helvetica", "bold");
-                    doc.setFontSize(12);
-                    doc.setTextColor(255, 255, 255);
-                    doc.text("TAE Transportación", marginLeft + 35, 20);
-                } else {
-                    doc.setFont("helvetica", "bold");
-                    doc.setFontSize(14);
-                    doc.setTextColor(255, 255, 255);
-                    doc.text("TAE Transportación", doc.internal.pageSize.getWidth() / 2, 20, { align: 'center' });
-                }
+
+                // Nombre centrado sin logo
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(16);
+                doc.setTextColor(255, 255, 255);
+                doc.text("TAE Transportación", doc.internal.pageSize.getWidth() / 2, 20, { align: 'center' });
+
                 let y = 45;
                 const folio = folioInput.value || 'Sin folio';
                 const date = new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -761,26 +725,25 @@
                 clearForm();
             }
 
-            preloadLogo().then(() => {
-                addItemBtn.addEventListener('click', addItem);
-                clearHistoryBtn.addEventListener('click', clearForm);
-                loadHistoryBtn.addEventListener('click', () => {
-                    if (historySelect.value) {
-                        loadQuotation(historySelect.value);
-                    } else {
-                        alert('Por favor, selecciona una cotización para cargar.');
-                    }
-                });
-                deleteHistoryBtn.addEventListener('click', deleteQuotation);
-                taxInput.addEventListener('input', () => {
-                    calculateTotal();
-                    saveQuotation();
-                });
-                [folioInput, clientNameInput, clientCityInput, clientPhoneInput, clientEmailInput, notesInput].forEach(input => {
-                    input.addEventListener('input', saveQuotation);
-                });
-                updateHistorySelect();
-            }).catch(err => console.error('Error loading logo:', err));
+            // Eventos
+            addItemBtn.addEventListener('click', addItem);
+            clearHistoryBtn.addEventListener('click', clearForm);
+            loadHistoryBtn.addEventListener('click', () => {
+                if (historySelect.value) {
+                    loadQuotation(historySelect.value);
+                } else {
+                    alert('Por favor, selecciona una cotización para cargar.');
+                }
+            });
+            deleteHistoryBtn.addEventListener('click', deleteQuotation);
+            taxInput.addEventListener('input', () => {
+                calculateTotal();
+                saveQuotation();
+            });
+            [folioInput, clientNameInput, clientCityInput, clientPhoneInput, clientEmailInput, notesInput].forEach(input => {
+                input.addEventListener('input', saveQuotation);
+            });
+            updateHistorySelect();
         });
     </script>
 </body>
