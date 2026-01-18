@@ -435,48 +435,6 @@
             document.getElementById('total').textContent = `$${total.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
         }
 
-        function numberToWordsSpanish(num) {
-            const units = ["", "UN", "DOS", "TRES", "CUATRO", "CINCO", "SEIS", "SIETE", "OCHO", "NUEVE"];
-            const teens = ["DIEZ", "ONCE", "DOCE", "TRECE", "CATORCE", "QUINCE", "DIECISÉIS", "DIECISIETE", "DIECIOCHO", "DIECINUEVE"];
-            const tens = ["", "", "VEINTE", "TREINTA", "CUARENTA", "CINCUENTA", "SESENTA", "SETENTA", "OCHENTA", "NOVENTA"];
-            const hundreds = ["", "CIENTO", "DOSCIENTOS", "TRESCIENTOS", "CUATROCIENTOS", "QUINIENTOS", "SEISCIENTOS", "SETECIENTOS", "OCHOCIENTOS", "NOVECIENTOS"];
-
-            let integerPart = Math.floor(num);
-            let decimalPart = Math.round((num - integerPart) * 100);
-            let words = "";
-
-            if (integerPart === 0) return "CERO PESOS";
-            
-            if (integerPart >= 1000000) {
-                let millions = Math.floor(integerPart / 1000000);
-                integerPart %= 1000000;
-                words += (millions === 1 ? "UN MILLÓN " : numberToWordsSpanish(millions) + " MILLONES ");
-            }
-            if (integerPart >= 1000) {
-                let thousands = Math.floor(integerPart / 1000);
-                integerPart %= 1000;
-                words += (thousands === 1 ? "MIL " : numberToWordsSpanish(thousands) + " MIL ");
-            }
-            if (integerPart >= 100) {
-                let h = Math.floor(integerPart / 100);
-                if (integerPart === 100) words += "CIEN ";
-                else words += hundreds[h] + " ";
-                integerPart %= 100;
-            }
-            if (integerPart >= 20) {
-                let t = Math.floor(integerPart / 10);
-                integerPart %= 10;
-                words += tens[t];
-                if (integerPart > 0) words += " Y " + units[integerPart];
-            } else if (integerPart >= 10) {
-                words += teens[integerPart - 10];
-            } else if (integerPart > 0) {
-                words += units[integerPart];
-            }
-
-            return `${words.trim()} PESOS ${decimalPart}/100 M.N.`;
-        }
-
         async function generatePDF() {
             try {
                 const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
@@ -500,17 +458,20 @@
                 doc.setCharSpace(2);
                 doc.text("TRANSPORTACIÓN EJECUTIVA", 15, 32);
 
+                // ** CORRECCIÓN DE ALINEACIÓN ** // Se ajustó a X=185 para evitar cortes en el margen derecho
+                const rightMarginX = 185; 
+
                 doc.setFont("helvetica", "bold");
                 doc.setFontSize(22);
-                doc.text("COTIZACIÓN", 195, 20, { align: 'right' });
+                doc.text("COTIZACIÓN", rightMarginX, 20, { align: 'right' });
                 
                 const folio = document.getElementById('folio-number').value || 'S/N';
                 const date = new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
                 
                 doc.setFontSize(10);
                 doc.setCharSpace(0);
-                doc.text(`FOLIO: ${folio}`, 195, 28, { align: 'right' });
-                doc.text(`FECHA: ${date}`, 195, 33, { align: 'right' });
+                doc.text(`FOLIO: ${folio}`, rightMarginX, 28, { align: 'right' });
+                doc.text(`FECHA: ${date}`, rightMarginX, 33, { align: 'right' });
 
                 // --- CLIENTE ---
                 let yPos = 65;
@@ -623,13 +584,8 @@
                 doc.text("TOTAL:", boxX + 2, currentY);
                 doc.text(totalText, boxX + boxWidth - 2, currentY, {align: 'right'});
 
-                // --- LETRA ---
-                const words = numberToWordsSpanish(totalVal);
-                doc.setFont("helvetica", "italic");
-                doc.setFontSize(8);
-                doc.setTextColor(80, 80, 80);
-                let wordsY = Math.max(finalY + 30, boxY + boxHeight + 10);
-                doc.text(`(${words})`, 195, wordsY, {align: 'right'});
+                // ** CORRECCIÓN 2: SE ELIMINÓ EL TEXTO DE CANTIDAD CON LETRA **
+                // (Se ha borrado el bloque de código que generaba el texto "CUATRO PESOS..." al final)
 
                 // --- FOOTER LIMPIO SIN CONTACTO ---
                 const footerY = 275;
