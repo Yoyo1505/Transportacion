@@ -28,8 +28,8 @@
             margin: 0 auto;
             background-color: var(--white);
             padding: 60px;
-            border-radius: 8px; /* Bordes sutiles */
-            box-shadow: 0 4px 20px rgba(0, 31, 63, 0.1); /* Sombra azulada muy suave */
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 31, 63, 0.1);
         }
 
         /* HEADER */
@@ -63,7 +63,7 @@
             text-align: right;
         }
 
-        /* TITULOS DE SECCION */
+        /* TITULOS */
         h2 {
             color: var(--white);
             background-color: var(--navy-dark);
@@ -76,20 +76,16 @@
             display: inline-block;
         }
 
-        .form-section {
-            margin-bottom: 50px;
-        }
+        .form-section { margin-bottom: 50px; }
 
-        /* GRID SYSTEM PARA FORMULARIOS */
+        /* GRID SYSTEM */
         .form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
         }
 
-        .form-group {
-            margin-bottom: 15px;
-        }
+        .form-group { margin-bottom: 15px; }
 
         label {
             display: block;
@@ -107,7 +103,7 @@
             border-radius: 4px;
             font-size: 15px;
             color: #333;
-            box-sizing: border-box; /* Importante para que no se salga del contenedor */
+            box-sizing: border-box;
             transition: all 0.3s ease;
             background-color: var(--white);
         }
@@ -118,7 +114,7 @@
             box-shadow: 0 0 0 3px rgba(0, 31, 63, 0.1);
         }
 
-        /* TABLA DE ITEMS */
+        /* TABLA */
         .items-container {
             border: 1px solid var(--navy-dark);
             border-radius: 4px;
@@ -136,10 +132,7 @@
             align-items: flex-end;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+        table { width: 100%; border-collapse: collapse; }
 
         th {
             background-color: var(--navy-dark);
@@ -156,9 +149,7 @@
             font-size: 14px;
         }
 
-        tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
+        tr:nth-child(even) { background-color: #f8f9fa; }
 
         /* BOTONES */
         button {
@@ -236,10 +227,9 @@
             color: #666;
             font-size: 13px;
         }
-
-        .footer strong {
-            color: var(--navy-dark);
-        }
+        
+        .footer p { margin: 5px 0; }
+        .footer strong { color: var(--navy-dark); }
 
         .button-group {
             display: flex;
@@ -379,6 +369,8 @@
 
         <div class="footer">
             <p><strong>TAE Transportación</strong> | Soluciones Integrales de Movilidad</p>
+            <p>Contacto: transpo_rick@hotmail.com | Tel: 52 55 7341 3969</p>
+            <p style="font-size: 11px;">Banco: Santander | Cuenta: 65-51041870-7 | CLABE: 014180655104187070</p>
         </div>
     </div>
 
@@ -390,15 +382,14 @@
     <script>
         const { jsPDF } = window.jspdf;
 
-        // Poner fecha actual al cargar
+        // Fecha actual
         document.getElementById('display-date').textContent = new Date().toLocaleDateString('es-MX', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-        // Elementos del DOM
+        // Elementos DOM
         const itemsContainer = document.querySelector('#items tbody');
         const itemSelect = document.getElementById('item-select');
         const addItemBtn = document.getElementById('add-item-btn');
 
-        // Event Listener para agregar items
         addItemBtn.addEventListener('click', addItem);
 
         function addItem() {
@@ -447,7 +438,6 @@
         }
 
         function numberToWordsSpanish(num) {
-            // Simplificado para el ejemplo, pero funcional
             const units = ["", "UN", "DOS", "TRES", "CUATRO", "CINCO", "SEIS", "SIETE", "OCHO", "NUEVE"];
             const teens = ["DIEZ", "ONCE", "DOCE", "TRECE", "CATORCE", "QUINCE", "DIECISÉIS", "DIECISIETE", "DIECIOCHO", "DIECINUEVE"];
             const tens = ["", "", "VEINTE", "TREINTA", "CUARENTA", "CINCUENTA", "SESENTA", "SETENTA", "OCHENTA", "NOVENTA"];
@@ -464,20 +454,17 @@
                 integerPart %= 1000000;
                 words += (millions === 1 ? "UN MILLÓN " : numberToWordsSpanish(millions) + " MILLONES ");
             }
-            
             if (integerPart >= 1000) {
                 let thousands = Math.floor(integerPart / 1000);
                 integerPart %= 1000;
                 words += (thousands === 1 ? "MIL " : numberToWordsSpanish(thousands) + " MIL ");
             }
-            
             if (integerPart >= 100) {
                 let h = Math.floor(integerPart / 100);
                 if (integerPart === 100) words += "CIEN ";
                 else words += hundreds[h] + " ";
                 integerPart %= 100;
             }
-
             if (integerPart >= 20) {
                 let t = Math.floor(integerPart / 10);
                 integerPart %= 10;
@@ -496,16 +483,15 @@
             try {
                 const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
                 
-                // --- COLORES CONFIG ---
-                const NAVY = [0, 31, 63]; // Azul Marino
+                // --- COLORES ---
+                const NAVY = [0, 31, 63];
                 const WHITE = [255, 255, 255];
                 const LIGHT_GRAY = [245, 245, 245];
 
-                // --- HEADER AZUL ---
+                // --- HEADER ---
                 doc.setFillColor(...NAVY);
-                doc.rect(0, 0, 210, 50, 'F'); // Bloque superior azul
+                doc.rect(0, 0, 210, 50, 'F'); 
 
-                // --- LOGO / NOMBRE ---
                 doc.setFont("helvetica", "bold");
                 doc.setFontSize(36);
                 doc.setTextColor(...WHITE);
@@ -516,7 +502,6 @@
                 doc.setCharSpace(2);
                 doc.text("TRANSPORTACIÓN EJECUTIVA", 15, 32);
 
-                // --- INFO COTIZACION DERECHA ---
                 doc.setFont("helvetica", "bold");
                 doc.setFontSize(22);
                 doc.text("COTIZACIÓN", 195, 20, { align: 'right' });
@@ -529,15 +514,13 @@
                 doc.text(`FOLIO: ${folio}`, 195, 28, { align: 'right' });
                 doc.text(`FECHA: ${date}`, 195, 33, { align: 'right' });
 
-                // --- DATOS DEL CLIENTE ---
+                // --- CLIENTE ---
                 let yPos = 65;
-                
                 doc.setTextColor(...NAVY);
                 doc.setFontSize(12);
                 doc.setFont("helvetica", "bold");
                 doc.text("INFORMACIÓN DEL CLIENTE", 15, yPos);
                 
-                // Linea separadora azul
                 doc.setDrawColor(...NAVY);
                 doc.setLineWidth(0.5);
                 doc.line(15, yPos + 2, 195, yPos + 2);
@@ -558,7 +541,7 @@
                 doc.text(`TELÉFONO: ${cPhone}`, 15, yPos);
                 doc.text(`EMAIL: ${cEmail}`, 110, yPos);
 
-                // --- TABLA DE ITEMS ---
+                // --- TABLA ---
                 const tableData = [];
                 document.querySelectorAll('#items tbody tr').forEach(row => {
                     const q = row.querySelector('.unit').value;
@@ -572,7 +555,7 @@
                     startY: yPos + 15,
                     head: [['CANT', 'CONCEPTO / SERVICIO', 'PRECIO UNITARIO', 'IMPORTE']],
                     body: tableData,
-                    theme: 'plain', // Limpio, sin colores raros
+                    theme: 'plain',
                     headStyles: {
                         fillColor: NAVY,
                         textColor: WHITE,
@@ -589,16 +572,13 @@
                         2: { halign: 'right' },
                         3: { halign: 'right' }
                     },
-                    alternateRowStyles: {
-                        fillColor: LIGHT_GRAY // Alternar con gris muy claro
-                    },
+                    alternateRowStyles: { fillColor: LIGHT_GRAY },
                     margin: { left: 15, right: 15 }
                 });
 
                 // --- NOTAS ---
                 let finalY = doc.lastAutoTable.finalY + 10;
                 const notes = document.getElementById('notes').value;
-                
                 if (notes) {
                     doc.setFont("helvetica", "bold");
                     doc.setFontSize(10);
@@ -608,18 +588,17 @@
                     doc.setFont("helvetica", "normal");
                     doc.setFontSize(9);
                     doc.setTextColor(60, 60, 60);
-                    const splitNotes = doc.splitTextToSize(notes, 100); // Ancho limitado para notas
+                    const splitNotes = doc.splitTextToSize(notes, 100);
                     doc.text(splitNotes, 15, finalY + 5);
                 }
 
-                // --- TOTALES (Bloque derecho) ---
+                // --- TOTALES ---
                 const totalText = document.getElementById('total').textContent;
                 const totalVal = parseFloat(totalText.replace('$', '').replace(/,/g, ''));
                 const taxRate = parseFloat(document.getElementById('tax').value);
                 const subtotalVal = totalVal / (1 + taxRate/100);
                 const taxVal = totalVal - subtotalVal;
 
-                // Dibujar caja de totales
                 const boxX = 130;
                 const boxY = finalY;
                 const boxWidth = 65;
@@ -646,17 +625,15 @@
                 doc.text("TOTAL:", boxX + 2, currentY);
                 doc.text(totalText, boxX + boxWidth - 2, currentY, {align: 'right'});
 
-                // --- CANTIDAD CON LETRA ---
-                const words = numberToWordsSpanish(totalVal); // Usar lógica real aquí si se integra
+                // --- LETRA ---
+                const words = numberToWordsSpanish(totalVal);
                 doc.setFont("helvetica", "italic");
                 doc.setFontSize(8);
                 doc.setTextColor(80, 80, 80);
-                
-                // Ajustar posición si las notas son largas
                 let wordsY = Math.max(finalY + 30, boxY + boxHeight + 10);
                 doc.text(`(${words})`, 195, wordsY, {align: 'right'});
 
-                // --- FOOTER ---
+                // --- FOOTER (Datos bancarios y contacto) ---
                 const footerY = 275;
                 doc.setDrawColor(...NAVY);
                 doc.setLineWidth(0.5);
@@ -671,7 +648,7 @@
                 doc.setFontSize(8);
                 doc.setTextColor(80, 80, 80);
 
-                // --- PREVIEW ---
+                // --- RENDER ---
                 const pdfContainer = document.getElementById('pdf-container');
                 pdfContainer.innerHTML = '';
                 const iframe = document.createElement('iframe');
@@ -679,17 +656,12 @@
                 iframe.style.height = '600px';
                 iframe.src = doc.output('datauristring');
                 pdfContainer.style.display = 'block';
-                
-                // Descarga automática opcional
-                // doc.save(`Cotizacion_${folio}.pdf`);
-
             } catch (error) {
                 console.error(error);
                 alert("Error generando el PDF. Revisa la consola.");
             }
         }
 
-        // Inicializar
         calculateTotal();
     </script>
 </body>
