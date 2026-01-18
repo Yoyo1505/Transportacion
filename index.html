@@ -5,272 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generador de Cotizaciones | TAE Transportación</title>
     <style>
-        :root {
-            --navy-primario: #0d1120;
-            --gold-acentuado: #c9c197;
-            --blanco: #ffffff;
-            --gris-plata: #b0bec5;
-            --texto-oscuro: #333;
-            --sombra-suave: rgba(0, 0, 0, 0.05);
-        }
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 15px;
-            background-color: var(--blanco);
-            color: var(--texto-oscuro);
-            line-height: 1.6;
-        }
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            background-color: var(--blanco);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px var(--sombra-suave);
-        }
-        .header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            margin-bottom: 20px;
-            padding: 20px;
-            background-color: var(--navy-primario);
-            border-radius: 8px;
-        }
-        .titulo h1 {
-            color: var(--blanco);
-            margin: 0;
-            font-size: clamp(24px, 6vw, 36px);
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-        .titulo p {
-            color: var(--blanco);
-            margin: 8px 0 0;
-            font-size: 16px;
-        }
-        h2 {
-            color: var(--navy-primario);
-            font-size: clamp(18px, 4vw, 24px);
-            font-weight: 600;
-            margin-top: 20px;
-        }
-        .form-section {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border: 1px solid var(--gris-plata);
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-            color: var(--navy-primario);
-            font-size: 14px;
-        }
-        input, select, textarea {
-            padding: 10px;
-            border: 1px solid var(--gris-plata);
-            border-radius: 6px;
-            width: 100%;
-            font-size: 14px;
-            background-color: var(--blanco);
-            transition: border-color 0.3s;
-        }
-        input:focus, select:focus, textarea:focus {
-            border-color: var(--navy-primario);
-            outline: none;
-        }
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-        button {
-            background-color: var(--navy-primario);
-            color: var(--blanco);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: var(--gris-plata);
-        }
-        .button-group {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 20px;
-            gap: 10px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            border: 1px solid var(--gris-plata);
-            font-size: 12px;
-        }
-        th {
-            background-color: var(--navy-primario);
-            color: var(--blanco);
-            padding: 10px;
-            text-align: left;
-            font-weight: 600;
-            font-size: 12px;
-        }
-        td {
-            padding: 10px;
-            border-bottom: 1px solid var(--gold-acentuado);
-            font-size: 12px;
-        }
-        tr:nth-child(even) {
-            background-color: rgba(176, 190, 197, 0.1);
-        }
-        .price {
-            text-align: right;
-        }
-        .total-section {
-            background-color: var(--navy-primario);
-            color: var(--blanco);
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 20px;
-            border: 1px solid var(--gris-plata);
-        }
-        .total-section label {
-            color: var(--blanco);
-            font-size: 14px;
-        }
-        #total {
-            font-size: clamp(20px, 5vw, 28px);
-            font-weight: 700;
-            margin-top: 10px;
-            display: block;
-            text-align: right;
-        }
-        .remove-btn {
-            background-color: var(--gris-plata);
-            color: var(--navy-primario);
-            padding: 6px 12px;
-            font-size: 12px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .remove-btn:hover {
-            background-color: #90a4ae;
-        }
-        .item-controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        .item-select {
-            flex-grow: 1;
-            min-width: 150px;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 20px;
-            padding: 10px;
-            background-color: var(--gris-plata);
-            border-radius: 8px;
-            color: var(--navy-primario);
-            font-size: 10px;
-        }
-        .footer a {
-            color: var(--navy-primario);
-            text-decoration: none;
-        }
-        .footer a:hover {
-            color: var(--gold-acentuado);
-        }
-        .history-controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        #history-select {
-            flex-grow: 1;
-            min-width: 200px;
-        }
-        @media (max-width: 768px) {
-            .container { padding: 15px; }
-            .header { padding: 15px; }
-            .titulo h1 { font-size: clamp(20px, 5vw, 28px); }
-            .form-section, .total-section { padding: 10px; }
-            table { font-size: 10px; }
-            th, td { padding: 8px; }
-            .button-group, .history-controls { flex-direction: column; }
-            button { width: 100%; padding: 12px; }
-        }
-        @media print {
-            body * { visibility: hidden; }
-            #pdf-container, #pdf-container * { visibility: visible; }
-            #pdf-container { position: absolute; left: 0; top: 0; width: 100%; }
-        }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 15px; background: #fff; color: #333; }
+        .container { max-width: 1100px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .header { background: #0d1120; color: #fff; text-align: center; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        h1 { margin: 0; font-size: 2rem; text-transform: uppercase; }
+        h2 { color: #0d1120; margin: 1.5rem 0 1rem; }
+        .form-section { border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin-bottom: 20px; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; color: #0d1120; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        button { background: #0d1120; color: #fff; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-weight: 600; margin: 5px; }
+        button:hover { background: #1a2440; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th { background: #0d1120; color: #fff; padding: 10px; text-align: left; }
+        td { padding: 10px; border-bottom: 1px solid #eee; }
+        .price { text-align: right; }
+        .remove-btn { background: #e0e0e0; color: #333; padding: 6px 12px; font-size: 0.9rem; }
+        .remove-btn:hover { background: #ccc; }
+        .item-controls { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px; }
+        #item-select { flex: 1; min-width: 220px; }
+        #total { font-size: 1.8rem; font-weight: bold; color: #c9c197; }
+        .total-section { background: #0d1120; color: #fff; padding: 20px; border-radius: 8px; }
+        .button-group { text-align: center; margin-top: 20px; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <div class="titulo">
-                <h1>TAE Transportación</h1>
-                <p>Sistema de Generación de Cotizaciones</p>
-            </div>
-        </div>
-
-        <div class="form-section">
-            <h2>Historial de Cotizaciones</h2>
-            <div class="history-controls">
-                <select id="history-select">
-                    <option value="">Selecciona una cotización anterior</option>
-                </select>
-                <button id="load-history-btn">Cargar Cotización</button>
-                <button id="delete-history-btn">Eliminar Cotización</button>
-            </div>
+            <h1>TAE Transportación</h1>
+            <p>Generador de Cotizaciones</p>
         </div>
 
         <div class="form-section">
             <h2>Datos del Cliente</h2>
-            <div class="form-group">
-                <label for="folio-number">Número de Folio</label>
-                <input type="text" id="folio-number" placeholder="Ej: COT-2025-001">
-            </div>
-            <div class="form-group">
-                <label for="client-name">Nombre del Cliente</label>
-                <input type="text" id="client-name" placeholder="Nombre completo">
-            </div>
-            <div class="form-group">
-                <label for="client-city">Ciudad</label>
-                <input type="text" id="client-city" placeholder="Ciudad">
-            </div>
-            <div class="form-group">
-                <label for="client-phone">Teléfono</label>
-                <input type="text" id="client-phone" placeholder="Teléfono">
-            </div>
-            <div class="form-group">
-                <label for="client-email">Email</label>
-                <input type="email" id="client-email" placeholder="Email">
-            </div>
+            <label for="folio">Folio:</label><input id="folio" placeholder="COT-2026-XXX">
+            <label for="cliente">Cliente:</label><input id="cliente">
+            <label for="ciudad">Ciudad:</label><input id="ciudad">
+            <label for="telefono">Teléfono:</label><input id="telefono">
+            <label for="email">Email:</label><input id="email">
         </div>
 
         <div class="form-section">
-            <h2>Ítems de la Cotización</h2>
+            <h2>Ítems de Cotización</h2>
             <div class="item-controls">
-                <select id="item-select" class="item-select">
-                    <option value="">SELECCIONA UN ÍTEM</option>
+                <select id="item-select">
+                    <option value="">Selecciona un ítem...</option>
                     <option value="AUTOBUS 45 PLAZAS">AUTOBUS 45 PLAZAS</option>
                     <option value="CAMIONETA CARGA">CAMIONETA CARGA</option>
                     <option value="CAMIONETA VAN">CAMIONETA VAN</option>
@@ -297,22 +75,17 @@
                     <option value="TOYOTA SPRINTER 20 PLAZAS">TOYOTA SPRINTER 20 PLAZAS</option>
                     <option value="TOYOTA TOLUCA">TOYOTA TOLUCA</option>
                     <option value="TRAMO CARRETERO">TRAMO CARRETERO</option>
-                    <option value="VAN DE CARGA">VAN DE CARRA</option>
+                    <option value="VAN DE CARGA">VAN DE CARGA</option>
                     <option value="VIATICOS">VIATICOS</option>
                 </select>
                 <button id="add-item-btn">Agregar Ítem</button>
-                <button id="clear-history-btn">Limpiar Cotización Actual</button>
             </div>
+            <label for="notes">Notas:</label><textarea id="notes" rows="3" placeholder="Anotaciones adicionales..."></textarea>
 
-            <div class="form-group">
-                <label for="notes">Anotaciones</label>
-                <textarea id="notes" rows="3" placeholder="Escribe aquí notas adicionales..."></textarea>
-            </div>
-
-            <table id="items">
+            <table id="items-table">
                 <thead>
                     <tr>
-                        <th>Cantidad</th>
+                        <th>Cant.</th>
                         <th>Concepto</th>
                         <th>Vehículo/Servicio</th>
                         <th>P. Unitario</th>
@@ -325,423 +98,165 @@
         </div>
 
         <div class="total-section">
-            <div class="form-group">
-                <label for="tax">Impuestos (%)</label>
-                <input type="number" id="tax" value="16" min="0" step="0.1">
-            </div>
-            <div>
-                <strong>TOTAL: <span id="total">$0.00</span></strong>
-            </div>
+            <label for="tax">Impuestos (%):</label><input type="number" id="tax" value="16" min="0" step="0.1" style="width:100px;">
+            <strong>Total: <span id="total">$0.00</span></strong>
         </div>
 
         <div class="button-group">
             <button onclick="generatePDF()">Generar PDF</button>
             <button onclick="window.print()">Imprimir</button>
-        </div>
-
-        <div class="footer">
-            <p>© 2025 TAE Transportación - Todos los derechos reservados</p>
+            <button onclick="clearForm()">Limpiar</button>
         </div>
     </div>
 
-    <div id="pdf-container" style="display: none;"></div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
-
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
         const { jsPDF } = window.jspdf;
-        let currentQuotationId = null;
+        const itemsBody = document.querySelector('#items-table tbody');
+        const itemSelect = document.getElementById('item-select');
+        const addBtn = document.getElementById('add-item-btn');
+        const taxInput = document.getElementById('tax');
+        const totalSpan = document.getElementById('total');
+        const folio = document.getElementById('folio');
+        const cliente = document.getElementById('cliente');
+        const ciudad = document.getElementById('ciudad');
+        const telefono = document.getElementById('telefono');
+        const email = document.getElementById('email');
+        const notes = document.getElementById('notes');
 
-        const itemsContainer   = document.querySelector('#items tbody');
-        const itemSelect       = document.getElementById('item-select');
-        const addItemBtn       = document.getElementById('add-item-btn');
-        const clearBtn         = document.getElementById('clear-history-btn');
-        const loadBtn          = document.getElementById('load-history-btn');
-        const deleteBtn        = document.getElementById('delete-history-btn');
-        const historySelect    = document.getElementById('history-select');
-        const taxInput         = document.getElementById('tax');
-        const totalDisplay     = document.getElementById('total');
-        const folioInput       = document.getElementById('folio-number');
-        const clientNameInput  = document.getElementById('client-name');
-        const clientCityInput  = document.getElementById('client-city');
-        const clientPhoneInput = document.getElementById('client-phone');
-        const clientEmailInput = document.getElementById('client-email');
-        const notesInput       = document.getElementById('notes');
-
-        // Precios sugeridos (ajústalos según tu realidad)
         const preciosSugeridos = {
-            "AUTOBUS 45 PLAZAS": 18500,
-            "MINIBUS 31 PLAZAS": 12500,
-            "SPRINTER": 9500,
-            "SPRINTER AIFA": 10500,
-            "TOYOTA SPRINTER 20 PLAZAS": 8800,
-            "SUBURBAN": 4800,
-            "SUBURBAN AIFA": 5200,
-            "SUBURBAN TOLUCA": 5500,
-            "SUBURBAN HIGH COUNTRY": 6500,
-            "SUBURBAN BLINDADA NIVEL 3": 12500,
-            "SUBURBAN ADVANCE": 5800,
-            "SEDAN": 3200,
-            "SEDAN AIFA": 3800,
-            "SEDAN TOLUCA": 4000,
-            "TOYOTA AIFA": 4200,
-            "TOYOTA TOLUCA": 4500,
-            "CAMIONETA VAN": 3800,
-            "VAN DE CARGA": 4500,
-            "CAMIONETA CARGA": 5200,
-            "HOSPEDAJE": 1800,
-            "VIATICOS": 1200,
-            "COMIDAS DEL OPERADOR": 450,
-            "COORDINADOR": 2500,
-            "DERECHOS DE PISO": 1800,
-            "PARKING": 800,
-            "HORAS EXTRA": 650,
-            "TRAMO CARRETERO": 0
-            // Agrega más según necesites
+            "AUTOBUS 45 PLAZAS": 18500, "MINIBUS 31 PLAZAS": 12500, "SPRINTER": 9500, "SPRINTER AIFA": 10500,
+            "TOYOTA SPRINTER 20 PLAZAS": 8800, "SUBURBAN": 4800, "SUBURBAN AIFA": 5200, "SUBURBAN TOLUCA": 5500,
+            "SUBURBAN HIGH COUNTRY": 6500, "SUBURBAN BLINDADA NIVEL 3": 12500, "SUBURBAN ADVANCE": 5800,
+            "SEDAN": 3200, "SEDAN AIFA": 3800, "SEDAN TOLUCA": 4000, "TOYOTA AIFA": 4200, "TOYOTA TOLUCA": 4500,
+            "CAMIONETA VAN": 3800, "VAN DE CARGA": 4500, "CAMIONETA CARGA": 5200, "HOSPEDAJE": 1800,
+            "VIATICOS": 1200, "COMIDAS DEL OPERADOR": 450, "COORDINADOR": 2500, "DERECHOS DE PISO": 1800,
+            "PARKING": 800, "HORAS EXTRA": 650, "TRAMO CARRETERO": 0
         };
 
-        function getPrecioSugerido(nombre) {
-            return preciosSugeridos[nombre] || 0;
-        }
-
-        function generateUUID() {
-            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-                const r = Math.random() * 16 | 0;
-                return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-            });
-        }
-
-        function saveQuotation() {
-            const items = Array.from(itemsContainer.querySelectorAll('tr')).map(row => ({
-                unit: row.querySelector('.unit').value,
-                description: row.cells[2].textContent,
-                unitPrice: row.querySelector('.unit-price').value
-            }));
-
-            const data = {
-                id: currentQuotationId || generateUUID(),
-                items,
-                folio: folioInput.value,
-                clientName: clientNameInput.value,
-                clientCity: clientCityInput.value,
-                clientPhone: clientPhoneInput.value,
-                clientEmail: clientEmailInput.value,
-                tax: taxInput.value,
-                notes: notesInput.value,
-                date: new Date().toISOString()
-            };
-
-            let quotations = JSON.parse(localStorage.getItem('quotations') || '[]');
-            const index = quotations.findIndex(q => q.id === data.id);
-            if (index !== -1) quotations[index] = data;
-            else quotations.push(data);
-            localStorage.setItem('quotations', JSON.stringify(quotations));
-            currentQuotationId = data.id;
-            updateHistorySelect();
-        }
-
-        function updateHistorySelect() {
-            const quotations = JSON.parse(localStorage.getItem('quotations') || '[]');
-            historySelect.innerHTML = '<option value="">Selecciona una cotización anterior</option>';
-            quotations.forEach(q => {
-                const opt = document.createElement('option');
-                opt.value = q.id;
-                opt.textContent = `${q.folio || 'Sin folio'} - ${q.clientName || 'Sin nombre'} (${new Date(q.date).toLocaleDateString('es-MX')})`;
-                historySelect.appendChild(opt);
-            });
-        }
-
-        function loadQuotation(id) {
-            const quotations = JSON.parse(localStorage.getItem('quotations') || '[]');
-            const data = quotations.find(q => q.id === id);
-            if (!data) return;
-
-            currentQuotationId = data.id;
-            folioInput.value       = data.folio || '';
-            clientNameInput.value   = data.clientName || '';
-            clientCityInput.value   = data.clientCity || '';
-            clientPhoneInput.value  = data.clientPhone || '';
-            clientEmailInput.value  = data.clientEmail || '';
-            taxInput.value         = data.tax || '16';
-            notesInput.value       = data.notes || '';
-
-            itemsContainer.innerHTML = '';
-            data.items.forEach(item => addItemToTable(item.unit, item.description, item.unitPrice));
-
-            calculateTotal();
-        }
-
-        function addItemToTable(cant = 1, desc, precioUnit = 0) {
+        addBtn.addEventListener('click', () => {
+            const selected = itemSelect.value.trim();
+            if (!selected) return alert('Selecciona un ítem primero.');
+            const precio = preciosSugeridos[selected] || 0;
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td><input type="number" class="unit" min="1" value="${cant}"></td>
+                <td><input type="number" class="qty" value="1" min="1" style="width:60px;"></td>
                 <td>Servicio de Transportación Ejecutiva</td>
-                <td>${desc}</td>
-                <td><input type="number" class="unit-price" min="0" step="0.01" value="${precioUnit}"></td>
-                <td class="price">$0.00</td>
+                <td>${selected}</td>
+                <td><input type="number" class="unit-price" value="${precio}" step="0.01" style="width:110px;"></td>
+                <td class="row-total price">$0.00</td>
                 <td><button class="remove-btn">Eliminar</button></td>
             `;
-            itemsContainer.appendChild(row);
+            itemsBody.appendChild(row);
 
-            const unitIn  = row.querySelector('.unit');
-            const priceIn = row.querySelector('.unit-price');
-            const totalTd = row.querySelector('.price');
-            const btnRem  = row.querySelector('.remove-btn');
+            const qtyInput = row.querySelector('.qty');
+            const priceInput = row.querySelector('.unit-price');
+            const totalCell = row.querySelector('.row-total');
 
-            function updateRow() {
-                const qty   = parseFloat(unitIn.value)  || 0;
-                const price = parseFloat(priceIn.value) || 0;
-                const tot   = qty * price;
-                totalTd.textContent = `$${tot.toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}`;
-                calculateTotal();
-            }
+            const updateRow = () => {
+                const q = parseFloat(qtyInput.value) || 0;
+                const p = parseFloat(priceInput.value) || 0;
+                const t = q * p;
+                totalCell.textContent = `$${t.toLocaleString('es-MX', {minimumFractionDigits:2})}`;
+                updateTotal();
+            };
 
-            unitIn.addEventListener('input',  () => { updateRow(); saveQuotation(); });
-            priceIn.addEventListener('input', () => { updateRow(); saveQuotation(); });
-            btnRem.addEventListener('click',  () => {
-                row.remove();
-                calculateTotal();
-                saveQuotation();
-            });
-
-            updateRow(); // calcula al crear
-        }
-
-        function addItem() {
-            const selected = itemSelect.value.trim();
-            if (!selected) {
-                alert('Selecciona un ítem primero.');
-                return;
-            }
-
-            const precio = getPrecioSugerido(selected);
-            addItemToTable(1, selected, precio);
+            qtyInput.addEventListener('input', updateRow);
+            priceInput.addEventListener('input', updateRow);
+            row.querySelector('.remove-btn').addEventListener('click', () => { row.remove(); updateTotal(); });
+            updateRow(); // Inicial
             itemSelect.value = '';
-            saveQuotation();
-        }
+        });
 
-        function calculateTotal() {
+        taxInput.addEventListener('input', updateTotal);
+
+        function updateTotal() {
             let subtotal = 0;
-            itemsContainer.querySelectorAll('tr').forEach(row => {
-                const qty   = parseFloat(row.querySelector('.unit').value)     || 0;
-                const price = parseFloat(row.querySelector('.unit-price').value) || 0;
-                subtotal += qty * price;
+            itemsBody.querySelectorAll('tr').forEach(r => {
+                const t = parseFloat(r.querySelector('.row-total').textContent.replace(/[$,]/g, '')) || 0;
+                subtotal += t;
             });
-
-            const ivaPorc = parseFloat(taxInput.value) || 0;
-            const iva     = subtotal * (ivaPorc / 100);
-            const total   = subtotal + iva;
-
-            totalDisplay.textContent = `$${total.toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}`;
+            const taxRate = parseFloat(taxInput.value) || 0;
+            const tax = subtotal * (taxRate / 100);
+            const total = subtotal + tax;
+            totalSpan.textContent = `$${total.toLocaleString('es-MX', {minimumFractionDigits:2})}`;
         }
 
         function clearForm() {
-            currentQuotationId = null;
-            itemsContainer.innerHTML = '';
-            folioInput.value = '';
-            clientNameInput.value = '';
-            clientCityInput.value = '';
-            clientPhoneInput.value = '';
-            clientEmailInput.value = '';
-            taxInput.value = '16';
-            notesInput.value = '';
-            calculateTotal();
+            itemsBody.innerHTML = '';
+            folio.value = cliente.value = ciudad.value = telefono.value = email.value = notes.value = '';
+            taxInput.value = 16;
+            updateTotal();
         }
 
-        function deleteQuotation() {
-            if (!currentQuotationId) {
-                alert('No hay cotización seleccionada para eliminar.');
-                return;
-            }
-            if (!confirm('¿Realmente deseas eliminar esta cotización del historial?')) return;
-
-            let quotations = JSON.parse(localStorage.getItem('quotations') || '[]');
-            quotations = quotations.filter(q => q.id !== currentQuotationId);
-            localStorage.setItem('quotations', JSON.stringify(quotations));
-            clearForm();
-            updateHistorySelect();
-        }
-
-        function numberToWordsSpanish(num) {
-            // Mantengo tu función original (puedes mejorarla si quieres)
-            const units = ["", "UN", "DOS", "TRES", "CUATRO", "CINCO", "SEIS", "SIETE", "OCHO", "NUEVE"];
-            const teens = ["DIEZ", "ONCE", "DOCE", "TRECE", "CATORCE", "QUINCE", "DIECISÉIS", "DIECISIETE", "DIECIOCHO", "DIECINUEVE"];
-            const tens  = ["", "", "VEINTE", "TREINTA", "CUARENTA", "CINCUENTA", "SESENTA", "SETENTA", "OCHENTA", "NOVENTA"];
-            const hundreds = ["", "CIENTO", "DOSCIENTOS", "TRESCIENTOS", "CUATROCIENTOS", "QUINIENTOS", "SEISCIENTOS", "SETECIENTOS", "OCHOCIENTOS", "NOVECIENTOS"];
-
-            if (num === 0) return "CERO PESOS";
-
-            let integer = Math.floor(num);
-            let decimal = Math.round((num - integer) * 100);
-            let words = "";
-
-            if (integer >= 1000000) {
-                let mill = Math.floor(integer / 1000000);
-                integer %= 1000000;
-                words += (mill === 1 ? "UN " : numberToWordsSpanish(mill)) + (mill === 1 ? "MILLÓN " : " MILLONES ");
-            }
-            if (integer >= 1000) {
-                let thou = Math.floor(integer / 1000);
-                integer %= 1000;
-                words += (thou === 1 ? "MIL " : numberToWordsSpanish(thou) + " MIL ");
-            }
-            if (integer >= 100) {
-                let hund = Math.floor(integer / 100);
-                integer %= 100;
-                words += hundreds[hund] + " ";
-            }
-            if (integer >= 20) {
-                let ten = Math.floor(integer / 10);
-                integer %= 10;
-                words += tens[ten] + (integer > 0 ? " Y " + units[integer] : "");
-            } else if (integer >= 10) {
-                words += teens[integer - 10];
-            } else if (integer > 0) {
-                words += units[integer];
-            }
-
-            words = words.trim();
-            return `${words} PESOS ${decimal.toString().padStart(2, '0')}/100`;
-        }
-
-        window.generatePDF = function() {
-            const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+        window.generatePDF = () => {
+            if (itemsBody.children.length === 0) return alert('Agrega ítems primero.');
+            const doc = new jsPDF();
             const margin = 10;
-            const pageWidth = doc.internal.pageSize.getWidth() - margin * 2;
-
-            // Header
-            doc.setFillColor(13, 17, 32);
-            doc.rect(0, 0, doc.internal.pageSize.getWidth(), 40, 'F');
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(16);
-            doc.setTextColor(255, 255, 255);
-            doc.text("TAE Transportación", doc.internal.pageSize.getWidth() / 2, 20, { align: 'center' });
-
+            doc.setFillColor(13,17,32);
+            doc.rect(0,0,210,40,'F');
+            doc.setFontSize(16); doc.setTextColor(255);
+            doc.text('TAE Transportación', 105, 20, {align:'center'});
             let y = 45;
-
-            const folio = folioInput.value || 'Sin folio';
-            const date = new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
-
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(9);
-            doc.setTextColor(51, 51, 51);
-            doc.text(`Folio: ${folio}`, margin, y);
-            doc.text(`Fecha: ${date}`, doc.internal.pageSize.getWidth() - margin, y, { align: 'right' });
+            const date = new Date().toLocaleDateString('es-MX');
+            doc.setFontSize(9); doc.setTextColor(51);
+            doc.text(`Folio: ${folio.value || 'Sin folio'}`, margin, y);
+            doc.text(`Fecha: ${date}`, 200 - margin, y, {align:'right'});
             y += 10;
-
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(14);
-            doc.setTextColor(13, 17, 32);
-            doc.text("Cotización", doc.internal.pageSize.getWidth() / 2, y, { align: 'center' });
+            doc.setFontSize(14); doc.setTextColor(13,17,32);
+            doc.text('Cotización', 105, y, {align:'center'});
             y += 15;
-
-            // Datos cliente
             doc.setFontSize(12);
-            doc.text("Datos del Cliente", margin, y);
-            y += 8;
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(9);
-            doc.text(`Nombre: ${clientNameInput.value || 'No especificado'}`, margin, y); y += 5;
-            doc.text(`Ciudad: ${clientCityInput.value || 'No especificado'}`, margin, y); y += 5;
-            doc.text(`Teléfono: ${clientPhoneInput.value || 'No especificado'}`, margin, y); y += 5;
-            doc.text(`Email: ${clientEmailInput.value || 'No especificado'}`, margin, y); y += 10;
+            doc.text('Datos del Cliente', margin, y);
+            y += 8; doc.setFontSize(9);
+            doc.text(`Nombre: ${cliente.value || 'N/A'}`, margin, y); y += 5;
+            doc.text(`Ciudad: ${ciudad.value || 'N/A'}`, margin, y); y += 5;
+            doc.text(`Teléfono: ${telefono.value || 'N/A'}`, margin, y); y += 5;
+            doc.text(`Email: ${email.value || 'N/A'}`, margin, y); y += 10;
 
-            // Tabla
-            const tableData = Array.from(itemsContainer.querySelectorAll('tr')).map(row => [
-                parseFloat(row.querySelector('.unit').value) || 1,
+            const tableData = Array.from(itemsBody.querySelectorAll('tr')).map(r => [
+                r.querySelector('.qty').value,
                 'Servicio de Transportación Ejecutiva',
-                row.cells[2].textContent,
-                `$${parseFloat(row.querySelector('.unit-price').value || 0).toLocaleString('es-MX', {minimumFractionDigits:2})}`,
-                row.querySelector('.price').textContent
+                r.cells[2].textContent,
+                `$${parseFloat(r.querySelector('.unit-price').value).toLocaleString('es-MX', {minimumFractionDigits:2})}`,
+                r.querySelector('.row-total').textContent
             ]);
 
             doc.autoTable({
                 head: [['Cant.', 'Concepto', 'Descripción', 'P. Unitario', 'Total']],
                 body: tableData,
                 startY: y,
-                headStyles: { fillColor: [13, 17, 32], textColor: [255,255,255], fontSize: 9, halign: 'center' },
-                bodyStyles: { fontSize: 8, textColor: [51,51,51] },
-                columnStyles: {
-                    0: { cellWidth: 15, halign: 'center' },
-                    1: { cellWidth: 40 },
-                    2: { cellWidth: 60 },
-                    3: { cellWidth: 30, halign: 'right' },
-                    4: { cellWidth: 30, halign: 'right' }
-                },
-                margin: { left: margin, right: margin }
+                headStyles: {fillColor: [13,17,32], textColor:255},
+                bodyStyles: {fontSize:8},
+                columnStyles: {0:{cellWidth:15,halign:'center'},1:{cellWidth:40},2:{cellWidth:60},3:{cellWidth:30,halign:'right'},4:{cellWidth:30,halign:'right'}},
+                margin
             });
 
             y = doc.lastAutoTable.finalY + 10;
-
-            // Notas
-            const notes = notesInput.value.trim();
-            if (notes) {
-                doc.setFont("helvetica", "bold");
-                doc.setFontSize(10);
-                doc.setTextColor(13, 17, 32);
-                doc.text("Anotaciones", margin, y);
-                y += 5;
-                doc.setFont("helvetica", "normal");
-                doc.setFontSize(8);
-                const split = doc.splitTextToSize(notes, pageWidth);
-                doc.text(split, margin, y);
-                y += split.length * 4 + 5;
+            if (notes.value) {
+                doc.setFontSize(10); doc.setTextColor(13,17,32);
+                doc.text('Notas:', margin, y); y += 5;
+                doc.setFontSize(8); doc.setTextColor(51);
+                doc.text(doc.splitTextToSize(notes.value, 190 - 2*margin), margin, y);
+                y += 20;
             }
 
-            // Totales
-            const totalNum = parseFloat(totalDisplay.textContent.replace('$','').replace(/,/g,'')) || 0;
-            const taxRate  = parseFloat(taxInput.value) || 0;
+            const totalNum = parseFloat(totalSpan.textContent.replace(/[$,]/g,'')) || 0;
+            const taxRate = parseFloat(taxInput.value) || 0;
             const subtotal = totalNum / (1 + taxRate/100);
-            const taxAmt   = totalNum - subtotal;
+            const taxAmt = totalNum - subtotal;
 
-            if (y > 240) { doc.addPage(); y = 20; }
-
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(10);
-            doc.setTextColor(13, 17, 32);
-            doc.text("Resumen de Pago", margin, y);
-            y += 5;
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(9);
+            doc.setFontSize(10); doc.setTextColor(13,17,32);
+            doc.text('Resumen:', margin, y);
+            y += 5; doc.setFontSize(9); doc.setTextColor(51);
             doc.text(`Subtotal: $${subtotal.toLocaleString('es-MX', {minimumFractionDigits:2})}`, margin, y); y += 5;
             doc.text(`Impuestos (${taxRate}%): $${taxAmt.toLocaleString('es-MX', {minimumFractionDigits:2})}`, margin, y); y += 5;
-            doc.setFont("helvetica", "bold");
             doc.setFontSize(10);
-            doc.text(`Total: $${totalNum.toLocaleString('es-MX', {minimumFractionDigits:2})}`, margin, y); y += 8;
+            doc.text(`Total: $${totalNum.toLocaleString('es-MX', {minimumFractionDigits:2})}`, margin, y);
 
-            doc.setFont("helvetica", "italic");
-            doc.setFontSize(8);
-            const words = numberToWordsSpanish(totalNum);
-            const splitWords = doc.splitTextToSize(words, pageWidth);
-            doc.text(splitWords, margin, y);
-
-            // Footer
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(8);
-            doc.setTextColor(51,51,51);
-            doc.text("TAE Transportación • Tel: 52 55 7341 3969", doc.internal.pageSize.getWidth()/2, doc.internal.pageSize.getHeight()-15, {align:'center'});
-            doc.text("© 2025 TAE Transportación - Todos los derechos reservados", doc.internal.pageSize.getWidth()/2, doc.internal.pageSize.getHeight()-10, {align:'center'});
-
-            doc.save(`Cotización_${folio}_${(clientNameInput.value || 'cliente').replace(/[^a-z0-9]/gi,'_')}.pdf`);
-            // clearForm();  ← comentado para que no limpie después de generar PDF (puedes descomentar si lo prefieres)
+            doc.save(`Cotizacion_${folio.value || 'TAE'}.pdf`);
         };
-
-        // Eventos
-        addItemBtn.addEventListener('click', addItem);
-        clearBtn.addEventListener('click', () => { if(confirm('¿Limpiar toda la cotización actual?')) clearForm(); });
-        loadBtn.addEventListener('click',  () => { if(historySelect.value) loadQuotation(historySelect.value); else alert('Selecciona una cotización.'); });
-        deleteBtn.addEventListener('click', () => { if(confirm('¿Eliminar esta cotización del historial?')) deleteQuotation(); });
-        taxInput.addEventListener('input', () => { calculateTotal(); saveQuotation(); });
-
-        [folioInput, clientNameInput, clientCityInput, clientPhoneInput, clientEmailInput, notesInput]
-            .forEach(el => el.addEventListener('input', saveQuotation));
-
-        // Inicio
-        updateHistorySelect();
-        calculateTotal();
-    });
     </script>
 </body>
 </html>
