@@ -206,45 +206,19 @@
             min-width: 200px;
         }
         @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-            .header {
-                padding: 15px;
-            }
-            .titulo h1 {
-                font-size: clamp(20px, 5vw, 28px);
-            }
-            .form-section, .total-section {
-                padding: 10px;
-            }
-            table {
-                font-size: 10px;
-            }
-            th, td {
-                padding: 8px;
-            }
-            .button-group, .history-controls {
-                flex-direction: column;
-            }
-            button {
-                width: 100%;
-                padding: 12px;
-            }
+            .container { padding: 15px; }
+            .header { padding: 15px; }
+            .titulo h1 { font-size: clamp(20px, 5vw, 28px); }
+            .form-section, .total-section { padding: 10px; }
+            table { font-size: 10px; }
+            th, td { padding: 8px; }
+            .button-group, .history-controls { flex-direction: column; }
+            button { width: 100%; padding: 12px; }
         }
         @media print {
-            body * {
-                visibility: hidden;
-            }
-            #pdf-container, #pdf-container * {
-                visibility: visible;
-            }
-            #pdf-container {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-            }
+            body * { visibility: hidden; }
+            #pdf-container, #pdf-container * { visibility: visible; }
+            #pdf-container { position: absolute; left: 0; top: 0; width: 100%; }
         }
     </style>
 </head>
@@ -256,6 +230,7 @@
                 <p>Sistema de Generación de Cotizaciones</p>
             </div>
         </div>
+
         <div class="form-section">
             <h2>Historial de Cotizaciones</h2>
             <div class="history-controls">
@@ -266,11 +241,12 @@
                 <button id="delete-history-btn">Eliminar Cotización</button>
             </div>
         </div>
+
         <div class="form-section">
             <h2>Datos del Cliente</h2>
             <div class="form-group">
                 <label for="folio-number">Número de Folio</label>
-                <input type="text" id="folio-number" placeholder="Ej: COT-2023-001">
+                <input type="text" id="folio-number" placeholder="Ej: COT-2025-001">
             </div>
             <div class="form-group">
                 <label for="client-name">Nombre del Cliente</label>
@@ -289,6 +265,7 @@
                 <input type="email" id="client-email" placeholder="Email">
             </div>
         </div>
+
         <div class="form-section">
             <h2>Ítems de la Cotización</h2>
             <div class="item-controls">
@@ -320,16 +297,18 @@
                     <option value="TOYOTA SPRINTER 20 PLAZAS">TOYOTA SPRINTER 20 PLAZAS</option>
                     <option value="TOYOTA TOLUCA">TOYOTA TOLUCA</option>
                     <option value="TRAMO CARRETERO">TRAMO CARRETERO</option>
-                    <option value="VAN DE CARGA">VAN DE CARGA</option>
+                    <option value="VAN DE CARGA">VAN DE CARRA</option>
                     <option value="VIATICOS">VIATICOS</option>
                 </select>
                 <button id="add-item-btn">Agregar Ítem</button>
                 <button id="clear-history-btn">Limpiar Cotización Actual</button>
             </div>
+
             <div class="form-group">
                 <label for="notes">Anotaciones</label>
                 <textarea id="notes" rows="3" placeholder="Escribe aquí notas adicionales..."></textarea>
             </div>
+
             <table id="items">
                 <thead>
                     <tr>
@@ -344,6 +323,7 @@
                 <tbody></tbody>
             </table>
         </div>
+
         <div class="total-section">
             <div class="form-group">
                 <label for="tax">Impuestos (%)</label>
@@ -353,396 +333,415 @@
                 <strong>TOTAL: <span id="total">$0.00</span></strong>
             </div>
         </div>
+
         <div class="button-group">
             <button onclick="generatePDF()">Generar PDF</button>
             <button onclick="window.print()">Imprimir</button>
         </div>
+
         <div class="footer">
             <p>© 2025 TAE Transportación - Todos los derechos reservados</p>
         </div>
     </div>
+
     <div id="pdf-container" style="display: none;"></div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const { jsPDF } = window.jspdf;
-            let currentQuotationId = null;
-            const itemsContainer = document.querySelector('#items tbody');
-            const itemSelect = document.getElementById('item-select');
-            const addItemBtn = document.getElementById('add-item-btn');
-            const clearHistoryBtn = document.getElementById('clear-history-btn');
-            const loadHistoryBtn = document.getElementById('load-history-btn');
-            const deleteHistoryBtn = document.getElementById('delete-history-btn');
-            const historySelect = document.getElementById('history-select');
-            const taxInput = document.getElementById('tax');
-            const totalDisplay = document.getElementById('total');
-            const folioInput = document.getElementById('folio-number');
-            const clientNameInput = document.getElementById('client-name');
-            const clientCityInput = document.getElementById('client-city');
-            const clientPhoneInput = document.getElementById('client-phone');
-            const clientEmailInput = document.getElementById('client-email');
-            const notesInput = document.getElementById('notes');
+    document.addEventListener('DOMContentLoaded', () => {
+        const { jsPDF } = window.jspdf;
+        let currentQuotationId = null;
 
-            function generateUUID() {
-                return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                    const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-                    return v.toString(16);
-                });
-            }
+        const itemsContainer   = document.querySelector('#items tbody');
+        const itemSelect       = document.getElementById('item-select');
+        const addItemBtn       = document.getElementById('add-item-btn');
+        const clearBtn         = document.getElementById('clear-history-btn');
+        const loadBtn          = document.getElementById('load-history-btn');
+        const deleteBtn        = document.getElementById('delete-history-btn');
+        const historySelect    = document.getElementById('history-select');
+        const taxInput         = document.getElementById('tax');
+        const totalDisplay     = document.getElementById('total');
+        const folioInput       = document.getElementById('folio-number');
+        const clientNameInput  = document.getElementById('client-name');
+        const clientCityInput  = document.getElementById('client-city');
+        const clientPhoneInput = document.getElementById('client-phone');
+        const clientEmailInput = document.getElementById('client-email');
+        const notesInput       = document.getElementById('notes');
 
-            function saveQuotation() {
-                const items = Array.from(itemsContainer.querySelectorAll('tr')).map(row => ({
-                    unit: row.querySelector('.unit').value,
-                    description: row.cells[2].textContent,
-                    unitPrice: row.querySelector('.unit-price').value
-                }));
-                const quotationData = {
-                    id: currentQuotationId || generateUUID(),
-                    items,
-                    folio: folioInput.value,
-                    clientName: clientNameInput.value,
-                    clientCity: clientCityInput.value,
-                    clientPhone: clientPhoneInput.value,
-                    clientEmail: clientEmailInput.value,
-                    tax: taxInput.value,
-                    notes: notesInput.value,
-                    date: new Date().toISOString()
-                };
-                let quotations = JSON.parse(localStorage.getItem('quotations') || '[]');
-                const index = quotations.findIndex(q => q.id === quotationData.id);
-                if (index !== -1) {
-                    quotations[index] = quotationData;
-                } else {
-                    quotations.push(quotationData);
-                }
-                localStorage.setItem('quotations', JSON.stringify(quotations));
-                currentQuotationId = quotationData.id;
-                updateHistorySelect();
-            }
+        // Precios sugeridos (ajústalos según tu realidad)
+        const preciosSugeridos = {
+            "AUTOBUS 45 PLAZAS": 18500,
+            "MINIBUS 31 PLAZAS": 12500,
+            "SPRINTER": 9500,
+            "SPRINTER AIFA": 10500,
+            "TOYOTA SPRINTER 20 PLAZAS": 8800,
+            "SUBURBAN": 4800,
+            "SUBURBAN AIFA": 5200,
+            "SUBURBAN TOLUCA": 5500,
+            "SUBURBAN HIGH COUNTRY": 6500,
+            "SUBURBAN BLINDADA NIVEL 3": 12500,
+            "SUBURBAN ADVANCE": 5800,
+            "SEDAN": 3200,
+            "SEDAN AIFA": 3800,
+            "SEDAN TOLUCA": 4000,
+            "TOYOTA AIFA": 4200,
+            "TOYOTA TOLUCA": 4500,
+            "CAMIONETA VAN": 3800,
+            "VAN DE CARGA": 4500,
+            "CAMIONETA CARGA": 5200,
+            "HOSPEDAJE": 1800,
+            "VIATICOS": 1200,
+            "COMIDAS DEL OPERADOR": 450,
+            "COORDINADOR": 2500,
+            "DERECHOS DE PISO": 1800,
+            "PARKING": 800,
+            "HORAS EXTRA": 650,
+            "TRAMO CARRETERO": 0
+            // Agrega más según necesites
+        };
 
-            function updateHistorySelect() {
-                const quotations = JSON.parse(localStorage.getItem('quotations') || '[]');
-                historySelect.innerHTML = '<option value="">Selecciona una cotización anterior</option>';
-                quotations.forEach(q => {
-                    const option = document.createElement('option');
-                    option.value = q.id;
-                    option.textContent = `${q.folio || 'Sin folio'} - ${q.clientName || 'Sin nombre'} (${new Date(q.date).toLocaleDateString('es-MX')})`;
-                    historySelect.appendChild(option);
-                });
-            }
+        function getPrecioSugerido(nombre) {
+            return preciosSugeridos[nombre] || 0;
+        }
 
-            function loadQuotation(id) {
-                const quotations = JSON.parse(localStorage.getItem('quotations') || '[]');
-                const quotationData = quotations.find(q => q.id === id);
-                if (!quotationData) return;
-                currentQuotationId = quotationData.id;
-                folioInput.value = quotationData.folio || '';
-                clientNameInput.value = quotationData.clientName || '';
-                clientCityInput.value = quotationData.clientCity || '';
-                clientPhoneInput.value = quotationData.clientPhone || '';
-                clientEmailInput.value = quotationData.clientEmail || '';
-                taxInput.value = quotationData.tax || '16';
-                notesInput.value = quotationData.notes || '';
-                itemsContainer.innerHTML = '';
-                quotationData.items.forEach(item => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td><input type="number" class="unit" min="1" value="${item.unit}"></td>
-                        <td>Servicio de Transportación Ejecutiva</td>
-                        <td>${item.description}</td>
-                        <td><input type="number" class="unit-price" min="0" step="0.01" value="${item.unitPrice}"></td>
-                        <td class="price">$0.00</td>
-                        <td><button class="remove-btn">Eliminar</button></td>
-                    `;
-                    itemsContainer.appendChild(row);
-                    row.querySelector('.unit').addEventListener('input', () => {
-                        calculateTotal();
-                        saveQuotation();
-                    });
-                    row.querySelector('.unit-price').addEventListener('input', () => {
-                        calculateTotal();
-                        saveQuotation();
-                    });
-                    row.querySelector('.remove-btn').addEventListener('click', () => {
-                        row.remove();
-                        calculateTotal();
-                        saveQuotation();
-                    });
-                });
-                calculateTotal();
-            }
-
-            function deleteQuotation() {
-                if (!currentQuotationId) {
-                    alert('No hay ninguna cotización seleccionada para eliminar.');
-                    return;
-                }
-                let quotations = JSON.parse(localStorage.getItem('quotations') || '[]');
-                quotations = quotations.filter(q => q.id !== currentQuotationId);
-                localStorage.setItem('quotations', JSON.stringify(quotations));
-                clearForm();
-                updateHistorySelect();
-            }
-
-            function clearForm() {
-                currentQuotationId = null;
-                itemsContainer.innerHTML = '';
-                folioInput.value = '';
-                clientNameInput.value = '';
-                clientCityInput.value = '';
-                clientPhoneInput.value = '';
-                clientEmailInput.value = '';
-                taxInput.value = '16';
-                notesInput.value = '';
-                calculateTotal();
-            }
-
-            function addItem() {
-                const selectedItem = itemSelect.value;
-                if (!selectedItem) {
-                    alert('Por favor, selecciona un ítem antes de agregar.');
-                    return;
-                }
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td><input type="number" class="unit" min="1" value="1"></td>
-                    <td>Servicio de Transportación Ejecutiva</td>
-                    <td>${selectedItem}</td>
-                    <td><input type="number" class="unit-price" min="0" step="0.01" value="0"></td>
-                    <td class="price">$0.00</td>
-                    <td><button class="remove-btn">Eliminar</button></td>
-                `;
-                itemsContainer.appendChild(row);
-                row.querySelector('.unit').addEventListener('input', () => {
-                    calculateTotal();
-                    saveQuotation();
-                });
-                row.querySelector('.unit-price').addEventListener('input', () => {
-                    calculateTotal();
-                    saveQuotation();
-                });
-                row.querySelector('.remove-btn').addEventListener('click', () => {
-                    row.remove();
-                    calculateTotal();
-                    saveQuotation();
-                });
-                itemSelect.value = '';
-                calculateTotal();
-                saveQuotation();
-            }
-
-            function calculateTotal() {
-                let subtotal = 0;
-                const rows = itemsContainer.querySelectorAll('tr');
-                rows.forEach(row => {
-                    const unit = parseFloat(row.querySelector('.unit').value) || 0;
-                    const unitPrice = parseFloat(row.querySelector('.unit-price').value) || 0;
-                    const total = unit * unitPrice;
-                    row.querySelector('.price').textContent = `$${total.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
-                    subtotal += total;
-                });
-                const taxRate = parseFloat(taxInput.value) || 0;
-                const taxAmount = subtotal * (taxRate / 100);
-                const total = subtotal + taxAmount;
-                totalDisplay.textContent = `$${total.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
-            }
-
-            function numberToWordsSpanish(num) {
-                const units = ["", "UN", "DOS", "TRES", "CUATRO", "CINCO", "SEIS", "SIETE", "OCHO", "NUEVE"];
-                const teens = ["DIEZ", "ONCE", "DOCE", "TRECE", "CATORCE", "QUINCE", "DIECISÉIS", "DIECISIETE", "DIECIOCHO", "DIECINUEVE"];
-                const tens = ["", "", "VEINTE", "TREINTA", "CUARENTA", "CINCUENTA", "SESENTA", "SETENTA", "OCHENTA", "NOVENTA"];
-                const hundreds = ["", "CIENTO", "DOSCIENTOS", "TRESCIENTOS", "CUATROCIENTOS", "QUINIENTOS", "SEISCIENTOS", "SETECIENTOS", "OCHOCIENTOS", "NOVECIENTOS"];
-                if (num === 0) return "CERO PESOS";
-                let integerPart = Math.floor(num);
-                let decimalPart = Math.round((num - integerPart) * 100);
-                let words = "";
-                if (integerPart >= 1000000) {
-                    let millions = Math.floor(integerPart / 1000000);
-                    integerPart %= 1000000;
-                    words += (millions === 1 ? "UN " : numberToWordsSpanish(millions)) + (millions === 1 ? "MILLÓN " : " MILLONES ");
-                }
-                if (integerPart >= 1000) {
-                    let thousandsPart = Math.floor(integerPart / 1000);
-                    integerPart %= 1000;
-                    words += (thousandsPart === 1 ? "MIL" : numberToWordsSpanish(thousandsPart) + " MIL") + " ";
-                }
-                if (integerPart >= 100) {
-                    let hundredPart = Math.floor(integerPart / 100);
-                    integerPart %= 100;
-                    words += hundreds[hundredPart] + " ";
-                }
-                if (integerPart >= 20) {
-                    let tenPart = Math.floor(integerPart / 10);
-                    integerPart %= 10;
-                    words += tens[tenPart] + (integerPart > 0 ? " Y " + units[integerPart] : "");
-                } else if (integerPart >= 10) {
-                    words += teens[integerPart - 10];
-                } else if (integerPart > 0) {
-                    words += units[integerPart];
-                }
-                words = words.trim();
-                return `${words} PESOS ${decimalPart.toString().padStart(2, '0')}/100`;
-            }
-
-            window.generatePDF = function() {
-                const doc = new jsPDF({
-                    orientation: 'portrait',
-                    unit: 'mm',
-                    format: 'a4'
-                });
-                const marginLeft = 10;
-                const marginRight = 10;
-                const pageWidth = doc.internal.pageSize.getWidth() - marginLeft - marginRight;
-                doc.setFillColor(13, 17, 32);
-                doc.rect(0, 0, doc.internal.pageSize.getWidth(), 40, 'F');
-
-                // Nombre centrado sin logo
-                doc.setFont("helvetica", "bold");
-                doc.setFontSize(16);
-                doc.setTextColor(255, 255, 255);
-                doc.text("TAE Transportación", doc.internal.pageSize.getWidth() / 2, 20, { align: 'center' });
-
-                let y = 45;
-                const folio = folioInput.value || 'Sin folio';
-                const date = new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
-                doc.setFont("helvetica", "normal");
-                doc.setFontSize(9);
-                doc.setTextColor(51, 51, 51);
-                doc.text(`Folio: ${folio}`, marginLeft, y);
-                doc.text(`Fecha: ${date}`, doc.internal.pageSize.getWidth() - marginRight, y, { align: 'right' });
-                y += 10;
-                doc.setFont("helvetica", "bold");
-                doc.setFontSize(14);
-                doc.setTextColor(13, 17, 32);
-                doc.text("Cotización", doc.internal.pageSize.getWidth() / 2, y, { align: 'center' });
-                y += 15;
-                doc.setFontSize(12);
-                doc.text("Datos del Cliente", marginLeft, y);
-                y += 8;
-                const clientName = clientNameInput.value || 'No especificado';
-                const clientCity = clientCityInput.value || 'No especificado';
-                const clientPhone = clientPhoneInput.value || 'No especificado';
-                const clientEmail = clientEmailInput.value || 'No especificado';
-                doc.setFont("helvetica", "normal");
-                doc.setFontSize(9);
-                doc.setTextColor(51, 51, 51);
-                doc.text(`Nombre: ${clientName}`, marginLeft, y);
-                y += 5;
-                doc.text(`Ciudad: ${clientCity}`, marginLeft, y);
-                y += 5;
-                doc.text(`Teléfono: ${clientPhone}`, marginLeft, y);
-                y += 5;
-                doc.text(`Email: ${clientEmail}`, marginLeft, y);
-                y += 10;
-                const tableData = Array.from(itemsContainer.querySelectorAll('tr')).map(row => [
-                    parseFloat(row.querySelector('.unit').value) || 1,
-                    'Servicio de Transportación Ejecutiva',
-                    row.cells[2].textContent,
-                    `$${parseFloat(row.querySelector('.unit-price').value || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
-                    row.querySelector('.price').textContent
-                ]);
-                doc.autoTable({
-                    head: [['Cant.', 'Concepto', 'Descripción', 'P. Unitario', 'Total']],
-                    body: tableData,
-                    startY: y,
-                    headStyles: {
-                        fillColor: [13, 17, 32],
-                        textColor: [255, 255, 255],
-                        fontSize: 9,
-                        halign: 'center'
-                    },
-                    bodyStyles: {
-                        fontSize: 8,
-                        textColor: [51, 51, 51]
-                    },
-                    columnStyles: {
-                        0: { cellWidth: 15, halign: 'center' },
-                        1: { cellWidth: 40 },
-                        2: { cellWidth: 60 },
-                        3: { cellWidth: 30, halign: 'right' },
-                        4: { cellWidth: 30, halign: 'right' }
-                    },
-                    margin: { left: marginLeft, right: marginRight },
-                    didDrawPage: (data) => {
-                        y = data.cursor.y + 10;
-                    }
-                });
-                y = doc.lastAutoTable.finalY + 10;
-                const notes = notesInput.value;
-                if (notes) {
-                    doc.setFont("helvetica", "bold");
-                    doc.setFontSize(10);
-                    doc.setTextColor(13, 17, 32);
-                    doc.text("Anotaciones", marginLeft, y);
-                    y += 5;
-                    doc.setFont("helvetica", "normal");
-                    doc.setFontSize(8);
-                    doc.setTextColor(51, 51, 51);
-                    const splitNotes = doc.splitTextToSize(notes, pageWidth - 20);
-                    doc.text(splitNotes, marginLeft, y);
-                    y += splitNotes.length * 4;
-                }
-                const taxRate = parseFloat(taxInput.value) || 0;
-                const totalNum = parseFloat(totalDisplay.textContent.replace('$', '').replace(/,/g, '')) || 0;
-                const subtotal = totalNum / (1 + taxRate / 100);
-                const taxAmount = totalNum - subtotal;
-                if (y > 240) {
-                    doc.addPage();
-                    y = 20;
-                }
-                doc.setFont("helvetica", "bold");
-                doc.setFontSize(10);
-                doc.setTextColor(13, 17, 32);
-                doc.text("Resumen de Pago", marginLeft, y);
-                y += 5;
-                doc.setFont("helvetica", "normal");
-                doc.setFontSize(9);
-                doc.setTextColor(51, 51, 51);
-                doc.text(`Subtotal: $${subtotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, marginLeft, y);
-                y += 5;
-                doc.text(`Impuestos (${taxRate}%): $${taxAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, marginLeft, y);
-                y += 5;
-                doc.setFont("helvetica", "bold");
-                doc.setFontSize(10);
-                doc.text(`Total: $${totalNum.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, marginLeft, y);
-                y += 5;
-                doc.setFont("helvetica", "italic");
-                doc.setFontSize(8);
-                const totalInWords = numberToWordsSpanish(totalNum);
-                const splitTotalInWords = doc.splitTextToSize(totalInWords, pageWidth - 20);
-                doc.text(splitTotalInWords, marginLeft, y);
-                doc.setFont("helvetica", "normal");
-                doc.setFontSize(8);
-                doc.setTextColor(51, 51, 51);
-                doc.text("TAE Transportación • Tel: 52 55 7341 3969 ,
-                    doc.internal.pageSize.getWidth() / 2, doc.internal.pageSize.getHeight() - 15, { align: 'center' });
-                doc.text("© 2025 TAE Transportación - Todos los derechos reservados",
-                    doc.internal.pageSize.getWidth() / 2, doc.internal.pageSize.getHeight() - 10, { align: 'center' });
-                doc.save(`Cotización_${folio}_${clientName.replace(/[^a-z0-9]/gi, '_')}.pdf`);
-                clearForm();
-            }
-
-            // Eventos
-            addItemBtn.addEventListener('click', addItem);
-            clearHistoryBtn.addEventListener('click', clearForm);
-            loadHistoryBtn.addEventListener('click', () => {
-                if (historySelect.value) {
-                    loadQuotation(historySelect.value);
-                } else {
-                    alert('Por favor, selecciona una cotización para cargar.');
-                }
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+                const r = Math.random() * 16 | 0;
+                return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
             });
-            deleteHistoryBtn.addEventListener('click', deleteQuotation);
-            taxInput.addEventListener('input', () => {
-                calculateTotal();
-                saveQuotation();
-            });
-            [folioInput, clientNameInput, clientCityInput, clientPhoneInput, clientEmailInput, notesInput].forEach(input => {
-                input.addEventListener('input', saveQuotation);
-            });
+        }
+
+        function saveQuotation() {
+            const items = Array.from(itemsContainer.querySelectorAll('tr')).map(row => ({
+                unit: row.querySelector('.unit').value,
+                description: row.cells[2].textContent,
+                unitPrice: row.querySelector('.unit-price').value
+            }));
+
+            const data = {
+                id: currentQuotationId || generateUUID(),
+                items,
+                folio: folioInput.value,
+                clientName: clientNameInput.value,
+                clientCity: clientCityInput.value,
+                clientPhone: clientPhoneInput.value,
+                clientEmail: clientEmailInput.value,
+                tax: taxInput.value,
+                notes: notesInput.value,
+                date: new Date().toISOString()
+            };
+
+            let quotations = JSON.parse(localStorage.getItem('quotations') || '[]');
+            const index = quotations.findIndex(q => q.id === data.id);
+            if (index !== -1) quotations[index] = data;
+            else quotations.push(data);
+            localStorage.setItem('quotations', JSON.stringify(quotations));
+            currentQuotationId = data.id;
             updateHistorySelect();
-        });
+        }
+
+        function updateHistorySelect() {
+            const quotations = JSON.parse(localStorage.getItem('quotations') || '[]');
+            historySelect.innerHTML = '<option value="">Selecciona una cotización anterior</option>';
+            quotations.forEach(q => {
+                const opt = document.createElement('option');
+                opt.value = q.id;
+                opt.textContent = `${q.folio || 'Sin folio'} - ${q.clientName || 'Sin nombre'} (${new Date(q.date).toLocaleDateString('es-MX')})`;
+                historySelect.appendChild(opt);
+            });
+        }
+
+        function loadQuotation(id) {
+            const quotations = JSON.parse(localStorage.getItem('quotations') || '[]');
+            const data = quotations.find(q => q.id === id);
+            if (!data) return;
+
+            currentQuotationId = data.id;
+            folioInput.value       = data.folio || '';
+            clientNameInput.value   = data.clientName || '';
+            clientCityInput.value   = data.clientCity || '';
+            clientPhoneInput.value  = data.clientPhone || '';
+            clientEmailInput.value  = data.clientEmail || '';
+            taxInput.value         = data.tax || '16';
+            notesInput.value       = data.notes || '';
+
+            itemsContainer.innerHTML = '';
+            data.items.forEach(item => addItemToTable(item.unit, item.description, item.unitPrice));
+
+            calculateTotal();
+        }
+
+        function addItemToTable(cant = 1, desc, precioUnit = 0) {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><input type="number" class="unit" min="1" value="${cant}"></td>
+                <td>Servicio de Transportación Ejecutiva</td>
+                <td>${desc}</td>
+                <td><input type="number" class="unit-price" min="0" step="0.01" value="${precioUnit}"></td>
+                <td class="price">$0.00</td>
+                <td><button class="remove-btn">Eliminar</button></td>
+            `;
+            itemsContainer.appendChild(row);
+
+            const unitIn  = row.querySelector('.unit');
+            const priceIn = row.querySelector('.unit-price');
+            const totalTd = row.querySelector('.price');
+            const btnRem  = row.querySelector('.remove-btn');
+
+            function updateRow() {
+                const qty   = parseFloat(unitIn.value)  || 0;
+                const price = parseFloat(priceIn.value) || 0;
+                const tot   = qty * price;
+                totalTd.textContent = `$${tot.toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}`;
+                calculateTotal();
+            }
+
+            unitIn.addEventListener('input',  () => { updateRow(); saveQuotation(); });
+            priceIn.addEventListener('input', () => { updateRow(); saveQuotation(); });
+            btnRem.addEventListener('click',  () => {
+                row.remove();
+                calculateTotal();
+                saveQuotation();
+            });
+
+            updateRow(); // calcula al crear
+        }
+
+        function addItem() {
+            const selected = itemSelect.value.trim();
+            if (!selected) {
+                alert('Selecciona un ítem primero.');
+                return;
+            }
+
+            const precio = getPrecioSugerido(selected);
+            addItemToTable(1, selected, precio);
+            itemSelect.value = '';
+            saveQuotation();
+        }
+
+        function calculateTotal() {
+            let subtotal = 0;
+            itemsContainer.querySelectorAll('tr').forEach(row => {
+                const qty   = parseFloat(row.querySelector('.unit').value)     || 0;
+                const price = parseFloat(row.querySelector('.unit-price').value) || 0;
+                subtotal += qty * price;
+            });
+
+            const ivaPorc = parseFloat(taxInput.value) || 0;
+            const iva     = subtotal * (ivaPorc / 100);
+            const total   = subtotal + iva;
+
+            totalDisplay.textContent = `$${total.toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2})}`;
+        }
+
+        function clearForm() {
+            currentQuotationId = null;
+            itemsContainer.innerHTML = '';
+            folioInput.value = '';
+            clientNameInput.value = '';
+            clientCityInput.value = '';
+            clientPhoneInput.value = '';
+            clientEmailInput.value = '';
+            taxInput.value = '16';
+            notesInput.value = '';
+            calculateTotal();
+        }
+
+        function deleteQuotation() {
+            if (!currentQuotationId) {
+                alert('No hay cotización seleccionada para eliminar.');
+                return;
+            }
+            if (!confirm('¿Realmente deseas eliminar esta cotización del historial?')) return;
+
+            let quotations = JSON.parse(localStorage.getItem('quotations') || '[]');
+            quotations = quotations.filter(q => q.id !== currentQuotationId);
+            localStorage.setItem('quotations', JSON.stringify(quotations));
+            clearForm();
+            updateHistorySelect();
+        }
+
+        function numberToWordsSpanish(num) {
+            // Mantengo tu función original (puedes mejorarla si quieres)
+            const units = ["", "UN", "DOS", "TRES", "CUATRO", "CINCO", "SEIS", "SIETE", "OCHO", "NUEVE"];
+            const teens = ["DIEZ", "ONCE", "DOCE", "TRECE", "CATORCE", "QUINCE", "DIECISÉIS", "DIECISIETE", "DIECIOCHO", "DIECINUEVE"];
+            const tens  = ["", "", "VEINTE", "TREINTA", "CUARENTA", "CINCUENTA", "SESENTA", "SETENTA", "OCHENTA", "NOVENTA"];
+            const hundreds = ["", "CIENTO", "DOSCIENTOS", "TRESCIENTOS", "CUATROCIENTOS", "QUINIENTOS", "SEISCIENTOS", "SETECIENTOS", "OCHOCIENTOS", "NOVECIENTOS"];
+
+            if (num === 0) return "CERO PESOS";
+
+            let integer = Math.floor(num);
+            let decimal = Math.round((num - integer) * 100);
+            let words = "";
+
+            if (integer >= 1000000) {
+                let mill = Math.floor(integer / 1000000);
+                integer %= 1000000;
+                words += (mill === 1 ? "UN " : numberToWordsSpanish(mill)) + (mill === 1 ? "MILLÓN " : " MILLONES ");
+            }
+            if (integer >= 1000) {
+                let thou = Math.floor(integer / 1000);
+                integer %= 1000;
+                words += (thou === 1 ? "MIL " : numberToWordsSpanish(thou) + " MIL ");
+            }
+            if (integer >= 100) {
+                let hund = Math.floor(integer / 100);
+                integer %= 100;
+                words += hundreds[hund] + " ";
+            }
+            if (integer >= 20) {
+                let ten = Math.floor(integer / 10);
+                integer %= 10;
+                words += tens[ten] + (integer > 0 ? " Y " + units[integer] : "");
+            } else if (integer >= 10) {
+                words += teens[integer - 10];
+            } else if (integer > 0) {
+                words += units[integer];
+            }
+
+            words = words.trim();
+            return `${words} PESOS ${decimal.toString().padStart(2, '0')}/100`;
+        }
+
+        window.generatePDF = function() {
+            const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+            const margin = 10;
+            const pageWidth = doc.internal.pageSize.getWidth() - margin * 2;
+
+            // Header
+            doc.setFillColor(13, 17, 32);
+            doc.rect(0, 0, doc.internal.pageSize.getWidth(), 40, 'F');
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(16);
+            doc.setTextColor(255, 255, 255);
+            doc.text("TAE Transportación", doc.internal.pageSize.getWidth() / 2, 20, { align: 'center' });
+
+            let y = 45;
+
+            const folio = folioInput.value || 'Sin folio';
+            const date = new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
+
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(9);
+            doc.setTextColor(51, 51, 51);
+            doc.text(`Folio: ${folio}`, margin, y);
+            doc.text(`Fecha: ${date}`, doc.internal.pageSize.getWidth() - margin, y, { align: 'right' });
+            y += 10;
+
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(14);
+            doc.setTextColor(13, 17, 32);
+            doc.text("Cotización", doc.internal.pageSize.getWidth() / 2, y, { align: 'center' });
+            y += 15;
+
+            // Datos cliente
+            doc.setFontSize(12);
+            doc.text("Datos del Cliente", margin, y);
+            y += 8;
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(9);
+            doc.text(`Nombre: ${clientNameInput.value || 'No especificado'}`, margin, y); y += 5;
+            doc.text(`Ciudad: ${clientCityInput.value || 'No especificado'}`, margin, y); y += 5;
+            doc.text(`Teléfono: ${clientPhoneInput.value || 'No especificado'}`, margin, y); y += 5;
+            doc.text(`Email: ${clientEmailInput.value || 'No especificado'}`, margin, y); y += 10;
+
+            // Tabla
+            const tableData = Array.from(itemsContainer.querySelectorAll('tr')).map(row => [
+                parseFloat(row.querySelector('.unit').value) || 1,
+                'Servicio de Transportación Ejecutiva',
+                row.cells[2].textContent,
+                `$${parseFloat(row.querySelector('.unit-price').value || 0).toLocaleString('es-MX', {minimumFractionDigits:2})}`,
+                row.querySelector('.price').textContent
+            ]);
+
+            doc.autoTable({
+                head: [['Cant.', 'Concepto', 'Descripción', 'P. Unitario', 'Total']],
+                body: tableData,
+                startY: y,
+                headStyles: { fillColor: [13, 17, 32], textColor: [255,255,255], fontSize: 9, halign: 'center' },
+                bodyStyles: { fontSize: 8, textColor: [51,51,51] },
+                columnStyles: {
+                    0: { cellWidth: 15, halign: 'center' },
+                    1: { cellWidth: 40 },
+                    2: { cellWidth: 60 },
+                    3: { cellWidth: 30, halign: 'right' },
+                    4: { cellWidth: 30, halign: 'right' }
+                },
+                margin: { left: margin, right: margin }
+            });
+
+            y = doc.lastAutoTable.finalY + 10;
+
+            // Notas
+            const notes = notesInput.value.trim();
+            if (notes) {
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(10);
+                doc.setTextColor(13, 17, 32);
+                doc.text("Anotaciones", margin, y);
+                y += 5;
+                doc.setFont("helvetica", "normal");
+                doc.setFontSize(8);
+                const split = doc.splitTextToSize(notes, pageWidth);
+                doc.text(split, margin, y);
+                y += split.length * 4 + 5;
+            }
+
+            // Totales
+            const totalNum = parseFloat(totalDisplay.textContent.replace('$','').replace(/,/g,'')) || 0;
+            const taxRate  = parseFloat(taxInput.value) || 0;
+            const subtotal = totalNum / (1 + taxRate/100);
+            const taxAmt   = totalNum - subtotal;
+
+            if (y > 240) { doc.addPage(); y = 20; }
+
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(10);
+            doc.setTextColor(13, 17, 32);
+            doc.text("Resumen de Pago", margin, y);
+            y += 5;
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(9);
+            doc.text(`Subtotal: $${subtotal.toLocaleString('es-MX', {minimumFractionDigits:2})}`, margin, y); y += 5;
+            doc.text(`Impuestos (${taxRate}%): $${taxAmt.toLocaleString('es-MX', {minimumFractionDigits:2})}`, margin, y); y += 5;
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(10);
+            doc.text(`Total: $${totalNum.toLocaleString('es-MX', {minimumFractionDigits:2})}`, margin, y); y += 8;
+
+            doc.setFont("helvetica", "italic");
+            doc.setFontSize(8);
+            const words = numberToWordsSpanish(totalNum);
+            const splitWords = doc.splitTextToSize(words, pageWidth);
+            doc.text(splitWords, margin, y);
+
+            // Footer
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(8);
+            doc.setTextColor(51,51,51);
+            doc.text("TAE Transportación • Tel: 52 55 7341 3969", doc.internal.pageSize.getWidth()/2, doc.internal.pageSize.getHeight()-15, {align:'center'});
+            doc.text("© 2025 TAE Transportación - Todos los derechos reservados", doc.internal.pageSize.getWidth()/2, doc.internal.pageSize.getHeight()-10, {align:'center'});
+
+            doc.save(`Cotización_${folio}_${(clientNameInput.value || 'cliente').replace(/[^a-z0-9]/gi,'_')}.pdf`);
+            // clearForm();  ← comentado para que no limpie después de generar PDF (puedes descomentar si lo prefieres)
+        };
+
+        // Eventos
+        addItemBtn.addEventListener('click', addItem);
+        clearBtn.addEventListener('click', () => { if(confirm('¿Limpiar toda la cotización actual?')) clearForm(); });
+        loadBtn.addEventListener('click',  () => { if(historySelect.value) loadQuotation(historySelect.value); else alert('Selecciona una cotización.'); });
+        deleteBtn.addEventListener('click', () => { if(confirm('¿Eliminar esta cotización del historial?')) deleteQuotation(); });
+        taxInput.addEventListener('input', () => { calculateTotal(); saveQuotation(); });
+
+        [folioInput, clientNameInput, clientCityInput, clientPhoneInput, clientEmailInput, notesInput]
+            .forEach(el => el.addEventListener('input', saveQuotation));
+
+        // Inicio
+        updateHistorySelect();
+        calculateTotal();
+    });
     </script>
 </body>
 </html>
