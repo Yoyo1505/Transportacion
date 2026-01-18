@@ -369,8 +369,6 @@
 
         <div class="footer">
             <p><strong>TAE Transportación</strong> | Soluciones Integrales de Movilidad</p>
-            <p>Contacto: transpo_rick@hotmail.com | Tel: 52 55 7341 3969</p>
-            <p style="font-size: 11px;">Banco: Santander | Cuenta: 65-51041870-7 | CLABE: 014180655104187070</p>
         </div>
     </div>
 
@@ -633,7 +631,7 @@
                 let wordsY = Math.max(finalY + 30, boxY + boxHeight + 10);
                 doc.text(`(${words})`, 195, wordsY, {align: 'right'});
 
-                // --- FOOTER (Datos bancarios y contacto) ---
+                // --- FOOTER LIMPIO SIN CONTACTO ---
                 const footerY = 275;
                 doc.setDrawColor(...NAVY);
                 doc.setLineWidth(0.5);
@@ -644,11 +642,7 @@
                 doc.setTextColor(...NAVY);
                 doc.text("TAE TRANSPORTACIÓN", 105, footerY + 5, { align: 'center' });
 
-                doc.setFont("helvetica", "normal");
-                doc.setFontSize(8);
-                doc.setTextColor(80, 80, 80);
-
-                // --- RENDER ---
+                // --- GENERAR Y DESCARGAR ---
                 const pdfContainer = document.getElementById('pdf-container');
                 pdfContainer.innerHTML = '';
                 const iframe = document.createElement('iframe');
@@ -656,6 +650,11 @@
                 iframe.style.height = '600px';
                 iframe.src = doc.output('datauristring');
                 pdfContainer.style.display = 'block';
+
+                // Descarga automática activada
+                const fileName = `Cotizacion_${folio}.pdf`;
+                doc.save(fileName);
+                
             } catch (error) {
                 console.error(error);
                 alert("Error generando el PDF. Revisa la consola.");
