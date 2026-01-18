@@ -3,140 +3,248 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cotizaciones TAE - Versión Depurada</title>
+  <title>Cotizaciones TAE Transportación</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; background: #f8f9fa; }
-    .container { max-width: 1000px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-    h1 { color: #0d1120; text-align: center; }
-    .controls { display: flex; gap: 10px; margin: 15px 0; flex-wrap: wrap; }
-    select, input, button { padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
-    button { background: #0d1120; color: white; cursor: pointer; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 0;
+      padding: 16px;
+      background: #f5f6f8;
+      color: #222;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+    h1 {
+      color: #0d1120;
+      text-align: center;
+      margin: 0 0 8px;
+      font-size: 2.1rem;
+    }
+    .subtitle { text-align: center; color: #555; margin-bottom: 24px; }
+    .section { margin-bottom: 32px; }
+    h2 { color: #0d1120; margin: 0 0 12px; font-size: 1.4rem; }
+    .controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    select, input, button {
+      padding: 10px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    select { min-width: 240px; flex: 1; }
+    button {
+      background: #0d1120;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+    }
     button:hover { background: #1a2440; }
-    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-    th, td { padding: 10px; text-align: left; border-bottom: 1px solid #eee; }
-    th { background: #0d1120; color: white; }
-    .total { font-size: 1.4em; font-weight: bold; text-align: right; margin-top: 15px; }
-    .remove { background: #dc3545; color: white; border: none; padding: 6px 10px; cursor: pointer; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+    }
+    th {
+      background: #0d1120;
+      color: white;
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+    }
+    td { padding: 10px; border-bottom: 1px solid #eee; }
+    .price { text-align: right; }
+    .remove {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .total-section {
+      background: #0d1120;
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    #total { font-size: 1.8rem; font-weight: bold; }
+    .actions { text-align: center; margin-top: 24px; }
+    .actions button { margin: 0 8px; padding: 12px 24px; font-size: 1.05rem; }
+    @media (max-width: 640px) {
+      .controls { flex-direction: column; }
+      select { min-width: auto; }
+    }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <h1>TAE Transportación - Cotizaciones</h1>
+  <h1>TAE Transportación</h1>
+  <div class="subtitle">Generador de Cotizaciones</div>
 
-  <div class="controls">
-    <select id="item">
-      <option value="">— Selecciona ítem —</option>
-      <option value="AUTOBUS 45 PLAZAS">AUTOBUS 45 PLAZAS</option>
-      <option value="SPRINTER">SPRINTER</option>
-      <option value="SUBURBAN">SUBURBAN</option>
-      <option value="SEDAN">SEDAN</option>
-      <option value="HOSPEDAJE">HOSPEDAJE</option>
-      <option value="VIATICOS">VIATICOS</option>
-      <!-- Agrega los demás aquí si quieres -->
-    </select>
-    <button id="agregar">Agregar Ítem</button>
+  <div class="section">
+    <h2>Datos básicos</h2>
+    <label>Folio:</label> <input id="folio" placeholder="COT-2026-XXX"><br><br>
+    <label>Cliente:</label> <input id="cliente"><br><br>
+    <label>Ciudad:</label> <input id="ciudad">
   </div>
 
-  <table id="tabla">
-    <thead>
-      <tr>
-        <th>Cant.</th>
-        <th>Servicio</th>
-        <th>P. Unitario</th>
-        <th>Total</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <div class="section">
+    <h2>Ítems</h2>
+    <div class="controls">
+      <select id="item-select">
+        <option value="">— selecciona servicio —</option>
+        <option value="AUTOBUS 45 PLAZAS">AUTOBUS 45 PLAZAS</option>
+        <option value="MINIBUS 31 PLAZAS">MINIBUS 31 PLAZAS</option>
+        <option value="SPRINTER">SPRINTER</option>
+        <option value="SPRINTER AIFA">SPRINTER AIFA</option>
+        <option value="SUBURBAN">SUBURBAN</option>
+        <option value="SUBURBAN AIFA">SUBURBAN AIFA</option>
+        <option value="SEDAN">SEDAN</option>
+        <option value="SEDAN AIFA">SEDAN AIFA</option>
+        <option value="HOSPEDAJE">HOSPEDAJE</option>
+        <option value="VIATICOS">VIATICOS</option>
+        <option value="HORAS EXTRA">HORAS EXTRA</option>
+        <option value="DERECHOS DE PISO">DERECHOS DE PISO</option>
+        <!-- puedes agregar los demás aquí -->
+      </select>
+      <button id="btn-add">Agregar ítem</button>
+    </div>
 
-  <div class="total">TOTAL: <span id="total">$0.00</span></div>
+    <table id="tabla">
+      <thead>
+        <tr>
+          <th style="width:80px">Cant.</th>
+          <th>Servicio</th>
+          <th style="width:140px">P. Unitario</th>
+          <th style="width:120px">Total</th>
+          <th style="width:60px"></th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
-  <div style="margin-top:20px; text-align:center;">
-    <button onclick="alert('Función PDF pendiente - dime si la quieres completa')">Generar PDF</button>
+  <div class="total-section">
+    <div>
+      <label>IVA (%):</label>
+      <input type="number" id="iva" value="16" min="0" step="0.1" style="width:80px; margin-left:8px;">
+    </div>
+    <div>
+      TOTAL: <span id="total">$0.00</span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button onclick="alert('Función PDF pendiente — dime si la quieres completa')">Generar PDF</button>
+    <button onclick="location.reload()">Limpiar</button>
   </div>
 </div>
 
 <script>
 // ────────────────────────────────────────────────
-//          ¡Código ultra simple y con depuración!
+//               Código principal
 // ────────────────────────────────────────────────
-
-const btn = document.getElementById('agregar');
-const sel = document.getElementById('item');
-const tbody = document.querySelector('#tabla tbody');
-const totalEl = document.getElementById('total');
 
 const precios = {
   "AUTOBUS 45 PLAZAS": 18500,
+  "MINIBUS 31 PLAZAS": 12500,
   "SPRINTER": 9500,
+  "SPRINTER AIFA": 10500,
   "SUBURBAN": 4800,
+  "SUBURBAN AIFA": 5200,
   "SEDAN": 3200,
+  "SEDAN AIFA": 3800,
   "HOSPEDAJE": 1800,
-  "VIATICOS": 1200
+  "VIATICOS": 1200,
+  "HORAS EXTRA": 650,
+  "DERECHOS DE PISO": 1800
 };
 
-function agregarItem() {
-  const texto = sel.value.trim();
-  if (!texto) {
-    alert("Selecciona un ítem primero");
-    return;
-  }
+const btnAdd   = document.getElementById("btn-add");
+const sel      = document.getElementById("item-select");
+const tbody    = document.querySelector("#tabla tbody");
+const ivaInput = document.getElementById("iva");
+const totalEl  = document.getElementById("total");
 
-  console.log("Intentando agregar:", texto); // ← para depurar
+function recalcularTodo() {
+  let suma = 0;
+  tbody.querySelectorAll("tr").forEach(tr => {
+    const celda = tr.querySelector(".total-fila");
+    if (celda) suma += Number(celda.textContent.replace(/[$,]/g,"")) || 0;
+  });
 
-  const precio = precios[texto] || 0;
-  const fila = document.createElement('tr');
-  fila.innerHTML = `
-    <td><input type="number" value="1" min="1" class="cant" style="width:60px;"></td>
-    <td>${texto}</td>
-    <td><input type="number" value="${precio}" step="100" class="precio" style="width:110px;"></td>
-    <td class="total-fila">$0.00</td>
+  const ivaPorc = Number(ivaInput.value) || 0;
+  const ivaMonto = suma * (ivaPorc / 100);
+  const granTotal = suma + ivaMonto;
+
+  totalEl.textContent = "$" + granTotal.toLocaleString("es-MX", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
+
+function agregarFila() {
+  const servicio = sel.value.trim();
+  if (!servicio) return alert("Selecciona un servicio primero");
+
+  const precio = precios[servicio] || 0;
+
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td><input type="number" value="1" min="1" class="cant"></td>
+    <td>${servicio}</td>
+    <td><input type="number" value="${precio}" step="100" class="precio"></td>
+    <td class="total-fila price">$0.00</td>
     <td><button class="remove">×</button></td>
   `;
-  tbody.appendChild(fila);
+  tbody.appendChild(tr);
 
-  const cant = fila.querySelector('.cant');
-  const prec = fila.querySelector('.precio');
-  const totCell = fila.querySelector('.total-fila');
-  const btnRemove = fila.querySelector('.remove');
+  const cant   = tr.querySelector(".cant");
+  const precioInput = tr.querySelector(".precio");
+  const totalFila   = tr.querySelector(".total-fila");
+  const btnRemove   = tr.querySelector(".remove");
 
-  function recalcular() {
-    const c = Number(cant.value) || 0;
-    const p = Number(prec.value) || 0;
-    const totalFila = c * p;
-    totCell.textContent = '$' + totalFila.toLocaleString('es-MX', {minimumFractionDigits: 2});
-    calcularTotalGeneral();
+  function actualizarFila() {
+    const c = Number(cant.value)   || 0;
+    const p = Number(precioInput.value) || 0;
+    const t = c * p;
+    totalFila.textContent = "$" + t.toLocaleString("es-MX", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+    recalcularTodo();
   }
 
-  cant.oninput = recalcular;
-  prec.oninput = recalcular;
-  btnRemove.onclick = () => { fila.remove(); calcularTotalGeneral(); };
+  cant.oninput = precioInput.oninput = actualizarFila;
+  btnRemove.onclick = () => { tr.remove(); recalcularTodo(); };
 
-  recalcular();           // calcula al crear
-  sel.value = '';         // limpia el select
-  console.log("Fila agregada OK");
+  actualizarFila();     // calcula inmediatamente
+  sel.value = "";       // limpia selección
 }
 
-function calcularTotalGeneral() {
-  let suma = 0;
-  document.querySelectorAll('.total-fila').forEach(td => {
-    suma += Number(td.textContent.replace(/[$,]/g, '')) || 0;
-  });
-  totalEl.textContent = '$' + suma.toLocaleString('es-MX', {minimumFractionDigits: 2});
-}
+// Eventos
+btnAdd.onclick = agregarFila;
+ivaInput.oninput = recalcularTodo;
 
-// Conectar botón
-if (btn) {
-  btn.onclick = agregarItem;
-  console.log("Botón encontrado y evento asignado");
-} else {
-  console.error("¡No se encontró el botón con id='agregar'!");
-}
-
-// Prueba inicial
-console.log("Script cargado correctamente");
+// Para depuración (opcional — puedes quitarlo después)
+console.log("Cotizador cargado → botón agregar debería funcionar");
 </script>
 
 </body>
