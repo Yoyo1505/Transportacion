@@ -163,9 +163,11 @@
             font-family: inherit;
         }
 
-        .desc-input:focus {
+        /* Efecto visual para que se note que se puede escribir */
+        .desc-input:focus, .desc-input:empty {
             background: var(--white);
-            border-color: var(--navy-light);
+            border-color: var(--border-color);
+            border-radius: 4px;
         }
 
         /* BOTONES */
@@ -313,30 +315,31 @@
             
             <div class="item-controls">
                 <div style="flex-grow: 1;">
-                    <label>Escribir o Seleccionar Vehículo / Servicio</label>
-                    <input type="text" id="item-input" list="servicios-list" placeholder="Ej: Servicio personalizado o selecciona del menú...">
-                    <datalist id="servicios-list">
-                        <option value="AUTOBUS 45 PLAZAS">
-                        <option value="MINIBUS 31 PLAZAS">
-                        <option value="SPRINTER">
-                        <option value="TOYOTA HIACE">
-                        <option value="CAMIONETA VAN">
-                        <option value="SUBURBAN HIGH COUNTRY">
-                        <option value="SUBURBAN BLINDADA NIVEL 3">
-                        <option value="SUBURBAN ADVANCE">
-                        <option value="SUBURBAN">
-                        <option value="SEDAN">
-                        <option value="VAN DE CARGA">
-                        <option value="CAMIONETA CARGA">
-                        <option value="COORDINADOR">
-                        <option value="VIATICOS">
-                        <option value="HOSPEDAJE">
-                        <option value="COMIDAS DEL OPERADOR">
-                        <option value="PARKING">
-                        <option value="DERECHOS DE PISO">
-                        <option value="TRAMO CARRETERO">
-                        <option value="HORAS EXTRA">
-                    </datalist>
+                    <label>Seleccionar Vehículo / Servicio</label>
+                    <select id="item-select">
+                        <option value="">-- Seleccione una opción --</option>
+                        <option value="TEXTO LIBRE">-- TEXTO LIBRE / EN BLANCO --</option>
+                        <option value="AUTOBUS 45 PLAZAS">AUTOBUS 45 PLAZAS</option>
+                        <option value="MINIBUS 31 PLAZAS">MINIBUS 31 PLAZAS</option>
+                        <option value="SPRINTER">SPRINTER</option>
+                        <option value="TOYOTA HIACE">TOYOTA HIACE</option>
+                        <option value="CAMIONETA VAN">CAMIONETA VAN</option>
+                        <option value="SUBURBAN HIGH COUNTRY">SUBURBAN HIGH COUNTRY</option>
+                        <option value="SUBURBAN BLINDADA NIVEL 3">SUBURBAN BLINDADA NIVEL 3</option>
+                        <option value="SUBURBAN ADVANCE">SUBURBAN ADVANCE</option>
+                        <option value="SUBURBAN">SUBURBAN</option>
+                        <option value="SEDAN">SEDAN</option>
+                        <option value="VAN DE CARGA">VAN DE CARGA</option>
+                        <option value="CAMIONETA CARGA">CAMIONETA CARGA</option>
+                        <option value="COORDINADOR">COORDINADOR</option>
+                        <option value="VIATICOS">VIATICOS</option>
+                        <option value="HOSPEDAJE">HOSPEDAJE</option>
+                        <option value="COMIDAS DEL OPERADOR">COMIDAS DEL OPERADOR</option>
+                        <option value="PARKING">PARKING</option>
+                        <option value="DERECHOS DE PISO">DERECHOS DE PISO</option>
+                        <option value="TRAMO CARRETERO">TRAMO CARRETERO</option>
+                        <option value="HORAS EXTRA">HORAS EXTRA</option>
+                    </select>
                 </div>
                 <button id="add-item-btn">Agregar +</button>
             </div>
@@ -402,28 +405,33 @@
 
         // Elementos DOM
         const itemsContainer = document.querySelector('#items tbody');
-        const itemInput = document.getElementById('item-input'); // MODIFICADO
+        const itemSelect = document.getElementById('item-select');
         const addItemBtn = document.getElementById('add-item-btn');
 
         addItemBtn.addEventListener('click', addItem);
 
         function addItem() {
-            const selectedItem = itemInput.value;
-            if (selectedItem.trim() !== '') {
+            const selectedItem = itemSelect.value;
+            
+            if (selectedItem) {
+                // Lógica para determinar si es texto libre o un valor del menú
+                const isFreeText = (selectedItem === "TEXTO LIBRE");
+                const descValue = isFreeText ? "" : selectedItem;
+                const placeholder = isFreeText ? "Escribe el concepto aquí..." : "Descripción del servicio";
+
                 const row = document.createElement('tr');
-                // MODIFICADO: La celda de descripción ahora es un input editable
                 row.innerHTML = `
                     <td><input type="number" class="unit" min="1" value="1" onchange="calculateTotal()" style="text-align: center;"></td>
-                    <td><input type="text" class="desc-input" value="${selectedItem}" placeholder="Descripción del servicio"></td>
+                    <td><input type="text" class="desc-input" value="${descValue}" placeholder="${placeholder}"></td>
                     <td><input type="number" class="unit-price" min="0" step="0.01" value="0" onchange="calculateTotal()" placeholder="$0.00"></td>
                     <td class="price" style="font-weight:bold;">$0.00</td>
                     <td style="text-align:center;"><button class="remove-btn" onclick="removeItem(this)">X</button></td>
                 `;
                 itemsContainer.appendChild(row);
-                itemInput.value = ''; // Limpiar campo
+                itemSelect.value = ''; // Regresar el menú al inicio
                 calculateTotal();
             } else {
-                alert('Por favor, escribe o selecciona un vehículo o servicio.');
+                alert('Por favor, selecciona una opción del menú.');
             }
         }
 
@@ -521,8 +529,7 @@
                 const tableData = [];
                 document.querySelectorAll('#items tbody tr').forEach(row => {
                     const q = row.querySelector('.unit').value;
-                    // MODIFICADO: Extraer el valor del nuevo input de descripción
-                    const desc = row.querySelector('.desc-input').value; 
+                    const desc = row.querySelector('.desc-input').value; // Toma el texto del input
                     const price = parseFloat(row.querySelector('.unit-price').value || 0).toLocaleString('en-US', {minimumFractionDigits: 2});
                     const total = row.querySelector('.price').textContent.replace('$', '');
                     tableData.push([q, desc, `$${price}`, `$${total}`]);
